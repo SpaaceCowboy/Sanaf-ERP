@@ -9,15 +9,15 @@ import path from 'path';
 dotenv.config();
 
 // Import routes
-import authRoutes from './routes/auth.js';
-import orderRoutes from './routes/orders.js';
-import projectRoutes from './routes/projects.js';
-import inventoryRoutes from './routes/inventory.js';
-import documentRoutes from './routes/documents.js';
-import reportRoutes from './routes/reports.js';
-import userRoutes from './routes/users.js';
-import customerRoutes from './routes/customers.js';
-import supplierRoutes from './routes/suppliers.js';
+import authRoutes from './routes/auth';
+import orderRoutes from './routes/orders';
+import projectRoutes from './routes/projects';
+import inventoryRoutes from './routes/inventory';
+import documentRoutes from './routes/documents';
+import reportRoutes from './routes/reports';
+import userRoutes from './routes/users';
+import customerRoutes from './routes/customers';
+import supplierRoutes from './routes/suppliers';
 
 // Initialize Express app
 const app: Application = express();

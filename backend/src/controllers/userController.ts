@@ -1,21 +1,29 @@
-import { Request, Response } from 'express';
-import { PrismaClient, Role } from '@prisma/client';
+import { Response } from 'express';
+import { Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import prisma from '../config/database';
+import { AuthenticatedRequest, PaginationParams } from '../types/index';
 import { parsePagination, buildPaginatedResponse } from '../utils/helpers';
 
-const prisma = new PrismaClient();
-
 // Get all users with pagination
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: (req.query.sortBy as string) || 'createdAt',
+      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
     const { search, role, isActive } = req.query;
 
     const where: any = {};
 
     if (search) {
       where.OR = [
-        { name: { contains: search as string, mode: 'insensitive' } },
+        { firstName: { contains: search as string, mode: 'insensitive' } },
+        { lastName: { contains: search as string, mode: 'insensitive' } },
         { email: { contains: search as string, mode: 'insensitive' } },
       ];
     }
@@ -36,12 +44,13 @@ export const getUsers = async (req: Request, res: Response) => {
         select: {
           id: true,
           email: true,
-          name: true,
+          firstName: true,
+          lastName: true,
           role: true,
           department: true,
           phone: true,
           isActive: true,
-          lastLogin: true,
+          lastLoginAt: true,
           createdAt: true,
           updatedAt: true,
           _count: {
@@ -55,7 +64,7 @@ export const getUsers = async (req: Request, res: Response) => {
       prisma.user.count({ where }),
     ]);
 
-    res.json(buildPaginatedResponse(users, total, page, limit));
+    res.json(buildPaginatedResponse(users, total, paginationParams));
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
@@ -63,7 +72,7 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 // Get single user by ID
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -72,12 +81,13 @@ export const getUserById = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        name: true,
+        firstName: true,
+        lastName: true,
         role: true,
         department: true,
         phone: true,
         isActive: true,
-        lastLogin: true,
+        lastLoginAt: true,
         createdAt: true,
         updatedAt: true,
         assignedTasks: {
@@ -110,9 +120,9 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 // Create new user
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { email, password, name, role, department, phone } = req.body;
+    const { email, password, firstName, lastName, role, department, phone } = req.body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -124,13 +134,14 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        name,
+        firstName,
+        lastName,
         role: role || 'VIEWER',
         department,
         phone,
@@ -138,7 +149,8 @@ export const createUser = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        name: true,
+        firstName: true,
+        lastName: true,
         role: true,
         department: true,
         phone: true,
@@ -148,15 +160,17 @@ export const createUser = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'USER_CREATED',
-        entityType: 'User',
-        entityId: user.id,
-        details: { email: user.email, name: user.name, role: user.role },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'USER_CREATED',
+          entity: 'User',
+          entityId: user.id,
+          newValues: { email: user.email, firstName: user.firstName, lastName: user.lastName, role: user.role },
+        },
+      });
+    }
 
     res.status(201).json(user);
   } catch (error) {
@@ -166,10 +180,10 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 // Update user
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, role, department, phone, isActive } = req.body;
+    const { firstName, lastName, role, department, phone, isActive } = req.body;
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
@@ -180,14 +194,15 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 
     // Prevent self-demotion from admin
-    if (id === req.user!.id && existingUser.role === 'ADMIN' && role !== 'ADMIN') {
+    if (req.user && id === req.user.userId && existingUser.role === 'ADMIN' && role !== 'ADMIN') {
       return res.status(400).json({ error: 'Cannot demote yourself from admin' });
     }
 
     const user = await prisma.user.update({
       where: { id },
       data: {
-        name,
+        firstName,
+        lastName,
         role,
         department,
         phone,
@@ -196,7 +211,8 @@ export const updateUser = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        name: true,
+        firstName: true,
+        lastName: true,
         role: true,
         department: true,
         phone: true,
@@ -206,15 +222,17 @@ export const updateUser = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'USER_UPDATED',
-        entityType: 'User',
-        entityId: user.id,
-        details: { changes: req.body },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'USER_UPDATED',
+          entity: 'User',
+          entityId: user.id,
+          newValues: { changes: req.body },
+        },
+      });
+    }
 
     res.json(user);
   } catch (error) {
@@ -224,7 +242,7 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 // Reset user password (admin only)
-export const resetUserPassword = async (req: Request, res: Response) => {
+export const resetUserPassword = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { newPassword } = req.body;
@@ -238,7 +256,7 @@ export const resetUserPassword = async (req: Request, res: Response) => {
     }
 
     // Hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
 
     await prisma.user.update({
       where: { id },
@@ -246,15 +264,17 @@ export const resetUserPassword = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'USER_PASSWORD_RESET',
-        entityType: 'User',
-        entityId: id,
-        details: { resetBy: req.user!.email },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'USER_PASSWORD_RESET',
+          entity: 'User',
+          entityId: id,
+          newValues: { resetBy: req.user.email },
+        },
+      });
+    }
 
     res.json({ message: 'Password reset successfully' });
   } catch (error) {
@@ -264,12 +284,12 @@ export const resetUserPassword = async (req: Request, res: Response) => {
 };
 
 // Delete user (soft delete by deactivating)
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
     // Prevent self-deletion
-    if (id === req.user!.id) {
+    if (req.user && id === req.user.userId) {
       return res.status(400).json({ error: 'Cannot delete your own account' });
     }
 
@@ -288,15 +308,17 @@ export const deleteUser = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'USER_DELETED',
-        entityType: 'User',
-        entityId: id,
-        details: { email: existingUser.email },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'USER_DELETED',
+          entity: 'User',
+          entityId: id,
+          oldValues: { email: existingUser.email },
+        },
+      });
+    }
 
     res.json({ message: 'User deactivated successfully' });
   } catch (error) {
@@ -306,10 +328,17 @@ export const deleteUser = async (req: Request, res: Response) => {
 };
 
 // Get user activity log
-export const getUserActivity = async (req: Request, res: Response) => {
+export const getUserActivity = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
 
     const [logs, total] = await Promise.all([
       prisma.auditLog.findMany({
@@ -321,7 +350,7 @@ export const getUserActivity = async (req: Request, res: Response) => {
       prisma.auditLog.count({ where: { userId: id } }),
     ]);
 
-    res.json(buildPaginatedResponse(logs, total, page, limit));
+    res.json(buildPaginatedResponse(logs, total, paginationParams));
   } catch (error) {
     console.error('Error fetching user activity:', error);
     res.status(500).json({ error: 'Failed to fetch user activity' });
@@ -329,7 +358,7 @@ export const getUserActivity = async (req: Request, res: Response) => {
 };
 
 // Get available roles
-export const getRoles = async (_req: Request, res: Response) => {
+export const getRoles = async (_req: AuthenticatedRequest, res: Response) => {
   try {
     const roles = [
       { value: 'ADMIN', label: 'Administrator', description: 'Full system access' },

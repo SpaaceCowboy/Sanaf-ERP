@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { Role } from '@prisma/client';
-import { AuthenticatedRequest, Permission, RolePermissions } from '../types/index.js';
+import { AuthenticatedRequest, Permission, RolePermissions } from '../types/index';
 
 /**
  * Middleware to check if user has required role(s)

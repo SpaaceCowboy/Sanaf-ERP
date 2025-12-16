@@ -1,8 +1,14 @@
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthenticatedRequest, JwtPayload } from '../types/index.js';
+import { AuthenticatedRequest, JwtPayload } from '../types/index';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+// WARNING: Ensure JWT_SECRET and JWT_REFRESH_SECRET are set in production!
+if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+  console.warn('⚠️  WARNING: JWT secrets not set! Using insecure defaults. Set JWT_SECRET and JWT_REFRESH_SECRET in environment!');
+}
+
+const JWT_SECRET = process.env.JWT_SECRET || 'INSECURE_DEFAULT_SECRET_CHANGE_IN_PRODUCTION';
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'INSECURE_DEFAULT_REFRESH_SECRET_CHANGE_IN_PRODUCTION';
 
 export function authenticate(
   req: AuthenticatedRequest,
@@ -74,17 +80,14 @@ export function generateTokens(payload: JwtPayload): { accessToken: string; refr
   const accessToken = jwt.sign(payload, JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
   });
-  
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET || 'refresh-secret', {
+
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   });
-  
+
   return { accessToken, refreshToken };
 }
 
 export function verifyRefreshToken(token: string): JwtPayload {
-  return jwt.verify(
-    token,
-    process.env.JWT_REFRESH_SECRET || 'refresh-secret'
-  ) as JwtPayload;
+  return jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
 }
