@@ -1,22 +1,28 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Response } from 'express';
+import prisma from '../config/database';
+import { AuthenticatedRequest, PaginationParams } from '../types/index';
 import { parsePagination, buildPaginatedResponse } from '../utils/helpers';
 
-const prisma = new PrismaClient();
-
 // Get all suppliers with pagination
-export const getSuppliers = async (req: Request, res: Response) => {
+export const getSuppliers = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: (req.query.sortBy as string) || 'createdAt',
+      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
     const { search, country, isActive } = req.query;
 
     const where: any = {};
 
     if (search) {
       where.OR = [
-        { name: { contains: search as string, mode: 'insensitive' } },
+        { companyName: { contains: search as string, mode: 'insensitive' } },
+        { contactName: { contains: search as string, mode: 'insensitive' } },
         { email: { contains: search as string, mode: 'insensitive' } },
-        { company: { contains: search as string, mode: 'insensitive' } },
       ];
     }
 
@@ -35,7 +41,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         take,
         include: {
           _count: {
-            select: { inventoryItems: true },
+            select: { inventory: true },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -43,7 +49,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
       prisma.supplier.count({ where }),
     ]);
 
-    res.json(buildPaginatedResponse(suppliers, total, page, limit));
+    res.json(buildPaginatedResponse(suppliers, total, paginationParams));
   } catch (error) {
     console.error('Error fetching suppliers:', error);
     res.status(500).json({ error: 'Failed to fetch suppliers' });
@@ -51,14 +57,14 @@ export const getSuppliers = async (req: Request, res: Response) => {
 };
 
 // Get single supplier by ID
-export const getSupplierById = async (req: Request, res: Response) => {
+export const getSupplierById = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
     const supplier = await prisma.supplier.findUnique({
       where: { id },
       include: {
-        inventoryItems: {
+        inventory: {
           take: 10,
           orderBy: { createdAt: 'desc' },
           select: {
@@ -66,11 +72,11 @@ export const getSupplierById = async (req: Request, res: Response) => {
             name: true,
             sku: true,
             quantity: true,
-            unitPrice: true,
+            unitCost: true,
           },
         },
         _count: {
-          select: { inventoryItems: true },
+          select: { inventory: true },
         },
       },
     });
@@ -87,7 +93,7 @@ export const getSupplierById = async (req: Request, res: Response) => {
 };
 
 // Create new supplier
-export const createSupplier = async (req: Request, res: Response) => {
+export const createSupplier = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const data = req.body;
 
@@ -96,15 +102,17 @@ export const createSupplier = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'SUPPLIER_CREATED',
-        entityType: 'Supplier',
-        entityId: supplier.id,
-        details: { name: supplier.name, email: supplier.email },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'SUPPLIER_CREATED',
+          entity: 'Supplier',
+          entityId: supplier.id,
+          newValues: { companyName: supplier.companyName, email: supplier.email },
+        },
+      });
+    }
 
     res.status(201).json(supplier);
   } catch (error) {
@@ -114,7 +122,7 @@ export const createSupplier = async (req: Request, res: Response) => {
 };
 
 // Update supplier
-export const updateSupplier = async (req: Request, res: Response) => {
+export const updateSupplier = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -133,15 +141,17 @@ export const updateSupplier = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'SUPPLIER_UPDATED',
-        entityType: 'Supplier',
-        entityId: supplier.id,
-        details: { changes: data },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'SUPPLIER_UPDATED',
+          entity: 'Supplier',
+          entityId: supplier.id,
+          newValues: { changes: data },
+        },
+      });
+    }
 
     res.json(supplier);
   } catch (error) {
@@ -151,13 +161,13 @@ export const updateSupplier = async (req: Request, res: Response) => {
 };
 
 // Delete supplier
-export const deleteSupplier = async (req: Request, res: Response) => {
+export const deleteSupplier = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
     const existingSupplier = await prisma.supplier.findUnique({
       where: { id },
-      include: { _count: { select: { inventoryItems: true } } },
+      include: { _count: { select: { inventory: true } } },
     });
 
     if (!existingSupplier) {
@@ -165,7 +175,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
     }
 
     // Check if supplier has inventory items
-    if (existingSupplier._count.inventoryItems > 0) {
+    if (existingSupplier._count.inventory > 0) {
       // Soft delete by deactivating
       await prisma.supplier.update({
         where: { id },
@@ -181,15 +191,17 @@ export const deleteSupplier = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'SUPPLIER_DELETED',
-        entityType: 'Supplier',
-        entityId: id,
-        details: { name: existingSupplier.name },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'SUPPLIER_DELETED',
+          entity: 'Supplier',
+          entityId: id,
+          oldValues: { companyName: existingSupplier.companyName },
+        },
+      });
+    }
 
     res.json({ message: 'Supplier deleted successfully' });
   } catch (error) {
@@ -199,10 +211,17 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 };
 
 // Get supplier inventory items
-export const getSupplierItems = async (req: Request, res: Response) => {
+export const getSupplierItems = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
 
     const [items, total] = await Promise.all([
       prisma.inventoryItem.findMany({
@@ -214,7 +233,7 @@ export const getSupplierItems = async (req: Request, res: Response) => {
       prisma.inventoryItem.count({ where: { supplierId: id } }),
     ]);
 
-    res.json(buildPaginatedResponse(items, total, page, limit));
+    res.json(buildPaginatedResponse(items, total, paginationParams));
   } catch (error) {
     console.error('Error fetching supplier items:', error);
     res.status(500).json({ error: 'Failed to fetch supplier items' });
@@ -222,17 +241,17 @@ export const getSupplierItems = async (req: Request, res: Response) => {
 };
 
 // Get supplier statistics
-export const getSupplierStats = async (req: Request, res: Response) => {
+export const getSupplierStats = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
     const supplier = await prisma.supplier.findUnique({
       where: { id },
       include: {
-        inventoryItems: {
+        inventory: {
           select: {
             quantity: true,
-            unitPrice: true,
+            unitCost: true,
             type: true,
           },
         },
@@ -243,13 +262,13 @@ export const getSupplierStats = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Supplier not found' });
     }
 
-    const totalItems = supplier.inventoryItems.length;
-    const totalValue = supplier.inventoryItems.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
+    const totalItems = supplier.inventory.length;
+    const totalValue = supplier.inventory.reduce(
+      (sum, item) => sum + (item.quantity * Number(item.unitCost)),
       0
     );
 
-    const itemsByType = supplier.inventoryItems.reduce((acc, item) => {
+    const itemsByType = supplier.inventory.reduce((acc, item) => {
       acc[item.type] = (acc[item.type] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -266,7 +285,7 @@ export const getSupplierStats = async (req: Request, res: Response) => {
 };
 
 // Get supplier countries list
-export const getSupplierCountries = async (_req: Request, res: Response) => {
+export const getSupplierCountries = async (_req: AuthenticatedRequest, res: Response) => {
   try {
     const countries = await prisma.supplier.findMany({
       where: { country: { not: null } },

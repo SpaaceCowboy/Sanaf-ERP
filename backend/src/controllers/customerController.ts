@@ -1,22 +1,28 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Response } from 'express';
+import prisma from '../config/database';
+import { AuthenticatedRequest, PaginationParams } from '../types/index';
 import { parsePagination, buildPaginatedResponse } from '../utils/helpers';
 
-const prisma = new PrismaClient();
-
 // Get all customers with pagination
-export const getCustomers = async (req: Request, res: Response) => {
+export const getCustomers = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: (req.query.sortBy as string) || 'createdAt',
+      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
     const { search, country, isActive } = req.query;
 
     const where: any = {};
 
     if (search) {
       where.OR = [
-        { name: { contains: search as string, mode: 'insensitive' } },
+        { companyName: { contains: search as string, mode: 'insensitive' } },
+        { contactName: { contains: search as string, mode: 'insensitive' } },
         { email: { contains: search as string, mode: 'insensitive' } },
-        { company: { contains: search as string, mode: 'insensitive' } },
       ];
     }
 
@@ -43,7 +49,7 @@ export const getCustomers = async (req: Request, res: Response) => {
       prisma.customer.count({ where }),
     ]);
 
-    res.json(buildPaginatedResponse(customers, total, page, limit));
+    res.json(buildPaginatedResponse(customers, total, paginationParams));
   } catch (error) {
     console.error('Error fetching customers:', error);
     res.status(500).json({ error: 'Failed to fetch customers' });
@@ -51,7 +57,7 @@ export const getCustomers = async (req: Request, res: Response) => {
 };
 
 // Get single customer by ID
-export const getCustomerById = async (req: Request, res: Response) => {
+export const getCustomerById = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -87,7 +93,7 @@ export const getCustomerById = async (req: Request, res: Response) => {
 };
 
 // Create new customer
-export const createCustomer = async (req: Request, res: Response) => {
+export const createCustomer = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const data = req.body;
 
@@ -96,15 +102,17 @@ export const createCustomer = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'CUSTOMER_CREATED',
-        entityType: 'Customer',
-        entityId: customer.id,
-        details: { name: customer.name, email: customer.email },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'CUSTOMER_CREATED',
+          entity: 'Customer',
+          entityId: customer.id,
+          newValues: { companyName: customer.companyName, email: customer.email },
+        },
+      });
+    }
 
     res.status(201).json(customer);
   } catch (error) {
@@ -114,7 +122,7 @@ export const createCustomer = async (req: Request, res: Response) => {
 };
 
 // Update customer
-export const updateCustomer = async (req: Request, res: Response) => {
+export const updateCustomer = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -133,15 +141,17 @@ export const updateCustomer = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'CUSTOMER_UPDATED',
-        entityType: 'Customer',
-        entityId: customer.id,
-        details: { changes: data },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'CUSTOMER_UPDATED',
+          entity: 'Customer',
+          entityId: customer.id,
+          newValues: { changes: data },
+        },
+      });
+    }
 
     res.json(customer);
   } catch (error) {
@@ -151,7 +161,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
 };
 
 // Delete customer
-export const deleteCustomer = async (req: Request, res: Response) => {
+export const deleteCustomer = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -181,15 +191,17 @@ export const deleteCustomer = async (req: Request, res: Response) => {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: req.user!.id,
-        action: 'CUSTOMER_DELETED',
-        entityType: 'Customer',
-        entityId: id,
-        details: { name: existingCustomer.name },
-      },
-    });
+    if (req.user) {
+      await prisma.auditLog.create({
+        data: {
+          userId: req.user.userId,
+          action: 'CUSTOMER_DELETED',
+          entity: 'Customer',
+          entityId: id,
+          oldValues: { companyName: existingCustomer.companyName },
+        },
+      });
+    }
 
     res.json({ message: 'Customer deleted successfully' });
   } catch (error) {
@@ -199,10 +211,17 @@ export const deleteCustomer = async (req: Request, res: Response) => {
 };
 
 // Get customer order history
-export const getCustomerOrders = async (req: Request, res: Response) => {
+export const getCustomerOrders = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { skip, take, page, limit } = parsePagination(req.query);
+    const paginationParams: PaginationParams = {
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 20,
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+    };
+
+    const { skip, take } = parsePagination(paginationParams);
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
@@ -217,7 +236,7 @@ export const getCustomerOrders = async (req: Request, res: Response) => {
       prisma.order.count({ where: { customerId: id } }),
     ]);
 
-    res.json(buildPaginatedResponse(orders, total, page, limit));
+    res.json(buildPaginatedResponse(orders, total, paginationParams));
   } catch (error) {
     console.error('Error fetching customer orders:', error);
     res.status(500).json({ error: 'Failed to fetch customer orders' });
@@ -225,7 +244,7 @@ export const getCustomerOrders = async (req: Request, res: Response) => {
 };
 
 // Get customer statistics
-export const getCustomerStats = async (req: Request, res: Response) => {
+export const getCustomerStats = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -247,7 +266,7 @@ export const getCustomerStats = async (req: Request, res: Response) => {
     }
 
     const totalOrders = customer.orders.length;
-    const totalRevenue = customer.orders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const totalRevenue = customer.orders.reduce((sum, order) => sum + Number(order.totalAmount), 0);
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
     const ordersByStatus = customer.orders.reduce((acc, order) => {
@@ -281,7 +300,7 @@ export const getCustomerStats = async (req: Request, res: Response) => {
 };
 
 // Get countries list (for filtering)
-export const getCountries = async (_req: Request, res: Response) => {
+export const getCountries = async (_req: AuthenticatedRequest, res: Response) => {
   try {
     const countries = await prisma.customer.findMany({
       where: { country: { not: null } },
