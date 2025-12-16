@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import prisma from '../config/database.js';
-import { AuthenticatedRequest, CreateProjectDto, UpdateProjectDto, CreateTaskDto, UpdateTaskDto, PaginationParams } from '../types/index.js';
-import { generateProjectNumber, parsePagination, buildPaginatedResponse } from '../utils/helpers.js';
+import prisma from '../config/database';
+import { AuthenticatedRequest, CreateProjectDto, UpdateProjectDto, CreateTaskDto, UpdateTaskDto, PaginationParams } from '../types/index';
+import { generateProjectNumber, parsePagination, buildPaginatedResponse } from '../utils/helpers';
 
 export async function getProjects(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

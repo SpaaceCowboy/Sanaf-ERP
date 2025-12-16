@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import prisma from '../config/database.js';
-import { generateTokens, verifyRefreshToken } from '../middleware/auth.js';
-import { AuthenticatedRequest, LoginDto, CreateUserDto } from '../types/index.js';
+import prisma from '../config/database';
+import { generateTokens, verifyRefreshToken } from '../middleware/auth';
+import { AuthenticatedRequest, LoginDto, CreateUserDto } from '../types/index';
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {

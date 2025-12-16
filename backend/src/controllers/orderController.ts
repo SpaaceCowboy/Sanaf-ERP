@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { Decimal } from '@prisma/client/runtime/library';
-import prisma from '../config/database.js';
-import { AuthenticatedRequest, CreateOrderDto, UpdateOrderDto, PaginationParams } from '../types/index.js';
-import { generateOrderNumber, parsePagination, buildPaginatedResponse } from '../utils/helpers.js';
+import prisma from '../config/database';
+import { AuthenticatedRequest, CreateOrderDto, UpdateOrderDto, PaginationParams } from '../types/index';
+import { generateOrderNumber, parsePagination, buildPaginatedResponse } from '../utils/helpers';
 
 export async function getOrders(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

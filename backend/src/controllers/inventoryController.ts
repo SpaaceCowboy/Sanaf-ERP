@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { Decimal } from '@prisma/client/runtime/library';
-import prisma from '../config/database.js';
-import { AuthenticatedRequest, CreateInventoryItemDto, UpdateInventoryItemDto, CreateMovementDto, PaginationParams } from '../types/index.js';
-import { parsePagination, buildPaginatedResponse, generateSku } from '../utils/helpers.js';
+import prisma from '../config/database';
+import { AuthenticatedRequest, CreateInventoryItemDto, UpdateInventoryItemDto, CreateMovementDto, PaginationParams } from '../types/index';
+import { parsePagination, buildPaginatedResponse, generateSku } from '../utils/helpers';
 
 export async function getInventoryItems(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

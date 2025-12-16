@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import prisma from '../config/database.js';
-import { AuthenticatedRequest } from '../types/index.js';
+import prisma from '../config/database';
+import { AuthenticatedRequest } from '../types/index';
 
 export async function getDashboardStats(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

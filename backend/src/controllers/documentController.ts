@@ -1,10 +1,10 @@
 import { Response } from 'express';
 import path from 'path';
 import fs from 'fs';
-import prisma from '../config/database.js';
-import { AuthenticatedRequest, PaginationParams } from '../types/index.js';
-import { generateDocumentNumber, parsePagination, buildPaginatedResponse, formatCurrency, formatDate } from '../utils/helpers.js';
-import { generateInvoicePdf, generatePackingListPdf, generateCommercialInvoicePdf } from '../services/pdfService.js';
+import prisma from '../config/database';
+import { AuthenticatedRequest, PaginationParams } from '../types/index';
+import { generateDocumentNumber, parsePagination, buildPaginatedResponse, formatCurrency, formatDate } from '../utils/helpers';
+import { generateInvoicePdf, generatePackingListPdf, generateCommercialInvoicePdf } from '../services/pdfService';
 
 const DOCUMENTS_DIR = process.env.DOCUMENTS_DIR || './documents';
 
