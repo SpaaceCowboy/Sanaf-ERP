@@ -14,7 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const registerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   password: z
     .string()
@@ -48,7 +49,7 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError(null);
     try {
-      await registerUser(data.email, data.password, data.name);
+      await registerUser(data.email, data.password, data.firstName, data.lastName);
       router.push('/dashboard');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
@@ -70,12 +71,12 @@ export default function RegisterPage() {
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-electric-500 to-electric-700 flex items-center justify-center shadow-glow">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <span className="text-2xl font-bold">ElectroFlow</span>
+          <span className="text-2xl font-bold">SANAF</span>
         </div>
 
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Create an account</h2>
-          <p className="text-muted-foreground">Get started with ElectroFlow ERP</p>
+          <p className="text-muted-foreground">Get started with SANAF ERP</p>
         </div>
 
         {error && (
@@ -90,14 +91,26 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="firstName">First Name</Label>
             <Input
-              id="name"
+              id="firstName"
               type="text"
-              placeholder="John Doe"
+              placeholder="John"
               icon={<User className="w-4 h-4" />}
-              error={errors.name?.message}
-              {...register('name')}
+              error={errors.firstName?.message}
+              {...register('firstName')}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="lastName">Last Name</Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Doe"
+              icon={<User className="w-4 h-4" />}
+              error={errors.lastName?.message}
+              {...register('lastName')}
             />
           </div>
 

@@ -117,13 +117,15 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
+  const port = PORT.toString().padEnd(5);
+  const env = (process.env.NODE_ENV || 'development').padEnd(11);
   console.log(`
 ╔═══════════════════════════════════════════════════╗
 ║                                                   ║
-║   🏭 ElectroFlow ERP Backend Server               ║
+║   🏭 SANAF ERP Backend Server                     ║
 ║                                                   ║
-║   Server running on: http://localhost:${PORT}       ║
-║   Environment: ${process.env.NODE_ENV || 'development'}                      ║
+║   Server: http://localhost:${port}                   ║
+║   Environment: ${env}           ║
 ║                                                   ║
 ╚═══════════════════════════════════════════════════╝
   `);

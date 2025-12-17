@@ -3,8 +3,8 @@ import { QueryProvider } from '@/components/providers/QueryProvider';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'ElectroFlow ERP',
-  description: 'Enterprise Resource Planning for Electronic Industries',
+  title: 'SANAF ERP',
+  description: 'Enterprise Resource Planning System',
   icons: {
     icon: '/favicon.ico',
   },

@@ -1,4 +1,4 @@
-// ElectroFlow ERP Database Schema
+// SANAF ERP Database Schema
 // PostgreSQL database with Prisma ORM
 
 generator client {
