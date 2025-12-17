@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: 'Outfit', system-ui, sans-serif;
+    --font-geist-sans: 'Outfit', system-ui, sans-serif;
+    --font-geist-mono: 'JetBrains Mono', monospace;
+
+    /* Dark industrial theme */
+    --background: 220 13% 8%;
+    --foreground: 210 10% 92%;
+
+    --card: 220 13% 10%;
+    --card-foreground: 210 10% 92%;
+
+    --popover: 220 13% 12%;
+    --popover-foreground: 210 10% 92%;
+
+    --primary: 160 79% 39%;
+    --primary-foreground: 210 10% 98%;
+
+    --secondary: 220 13% 16%;
+    --secondary-foreground: 210 10% 92%;
+
+    --muted: 220 13% 18%;
+    --muted-foreground: 220 8% 56%;
+
+    --accent: 160 79% 39%;
+    --accent-foreground: 210 10% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 10% 98%;
+
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 160 79% 39%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-semibold tracking-tight;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-geist-mono);
+  }
+}
+
+@layer components {
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-card/80 backdrop-blur-md border border-white/5;
+  }
+
+  /* Glow effects */
+  .glow-line {
+    @apply absolute h-px bg-gradient-to-r from-transparent via-electric-500/50 to-transparent;
+  }
+
+  /* Status badges */
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .status-draft {
+    @apply bg-carbon-800 text-carbon-300 border border-carbon-700;
+  }
+
+  .status-confirmed {
+    @apply bg-circuit-950/50 text-circuit-400 border border-circuit-800/50;
+  }
+
+  .status-in-production {
+    @apply bg-volt-950/50 text-volt-400 border border-volt-800/50;
+  }
+
+  .status-shipped {
+    @apply bg-electric-950/50 text-electric-400 border border-electric-800/50;
+  }
+
+  .status-delivered {
+    @apply bg-electric-900/50 text-electric-300 border border-electric-700/50;
+  }
+
+  .status-cancelled {
+    @apply bg-danger-950/50 text-danger-400 border border-danger-800/50;
+  }
+
+  /* Priority indicators */
+  .priority-low {
+    @apply text-carbon-400;
+  }
+
+  .priority-medium {
+    @apply text-circuit-400;
+  }
+
+  .priority-high {
+    @apply text-volt-400;
+  }
+
+  .priority-critical {
+    @apply text-danger-400;
+  }
+
+  /* Card variants */
+  .card-elevated {
+    @apply bg-card border border-border shadow-lg shadow-black/20;
+  }
+
+  .card-interactive {
+    @apply card-elevated transition-all duration-200 hover:border-electric-800/50 hover:shadow-glow cursor-pointer;
+  }
+
+  /* Stats card */
+  .stats-card {
+    @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-carbon-900 to-carbon-950 border border-carbon-800 p-6;
+  }
+
+  .stats-card::before {
+    content: '';
+    @apply absolute inset-0 bg-circuit-pattern opacity-30;
+  }
+
+  /* Table styles */
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider bg-muted/50;
+  }
+
+  .data-table td {
+    @apply px-4 py-4 border-b border-border;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-muted/30;
+  }
+
+  /* Input focus states */
+  .input-focus {
+    @apply focus:ring-2 focus:ring-electric-500/20 focus:border-electric-500 transition-all duration-200;
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    @apply bg-gradient-to-r from-transparent via-white/5 to-transparent bg-[length:200%_100%] animate-shimmer;
+  }
+
+  /* Circuit board decoration */
+  .circuit-decoration {
+    @apply absolute pointer-events-none opacity-10;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 50h30M50 10v30M60 50h30M50 60v30' stroke='%2316B378' stroke-width='2' fill='none'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%2316B378'/%3E%3Ccircle cx='10' cy='50' r='3' fill='%2316B378'/%3E%3Ccircle cx='90' cy='50' r='3' fill='%2316B378'/%3E%3Ccircle cx='50' cy='10' r='3' fill='%2316B378'/%3E%3Ccircle cx='50' cy='90' r='3' fill='%2316B378'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-in {
+    animation: animate-in 0.3s ease-out;
+  }
+
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-electric-400 to-electric-600;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-volt-400 to-volt-600;
+  }
+
+  /* Focus visible outline */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+/* React Query devtools positioning fix */
+.ReactQueryDevtools {
+  z-index: 99999 !important;
+}
