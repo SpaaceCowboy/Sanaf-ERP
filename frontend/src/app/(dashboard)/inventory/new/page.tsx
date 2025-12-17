@@ -22,14 +22,14 @@ const inventorySchema = z.object({
   description: z.string().optional(),
   type: z.enum(['RAW_MATERIAL', 'COMPONENT', 'FINISHED_GOOD', 'PACKAGING']),
   category: z.string().min(1, 'Category is required'),
-  quantity: z.coerce.number().min(0).default(0),
-  minStock: z.coerce.number().min(0).default(0),
-  maxStock: z.coerce.number().min(0).optional(),
-  reorderPoint: z.coerce.number().min(0).default(10),
-  unitCost: z.coerce.number().min(0, 'Unit cost must be positive'),
+  quantity: z.coerce.number().int().min(0).default(0),
+  minStock: z.coerce.number().int().min(0).default(0),
+  maxStock: z.coerce.number().int().min(0).optional(),
+  reorderPoint: z.coerce.number().int().min(0).default(10),
+  unitCost: z.coerce.number().positive('Unit cost must be positive'),
   currency: z.string().default('USD'),
   unit: z.string().default('PCS'),
-  weight: z.coerce.number().min(0).optional(),
+  weight: z.coerce.number().positive().optional(),
   dimensions: z.string().optional(),
   hsCode: z.string().optional(),
   countryOfOrigin: z.string().optional(),
@@ -89,7 +89,24 @@ export default function NewInventoryPage() {
   const onSubmit = async (data: InventoryFormData) => {
     setIsSubmitting(true);
     try {
-      await createMutation.mutateAsync(data);
+      // Ensure all numbers are proper types and remove empty optional fields
+      const formattedData = {
+        ...data,
+        quantity: Number(data.quantity),
+        minStock: Number(data.minStock),
+        maxStock: data.maxStock ? Number(data.maxStock) : undefined,
+        reorderPoint: Number(data.reorderPoint),
+        unitCost: Number(data.unitCost),
+        weight: data.weight && Number(data.weight) > 0 ? Number(data.weight) : undefined,
+        supplierId: data.supplierId || undefined,
+        description: data.description || undefined,
+        dimensions: data.dimensions || undefined,
+        hsCode: data.hsCode || undefined,
+        countryOfOrigin: data.countryOfOrigin || undefined,
+        warehouseZone: data.warehouseZone || undefined,
+        binLocation: data.binLocation || undefined,
+      };
+      await createMutation.mutateAsync(formattedData);
     } finally {
       setIsSubmitting(false);
     }

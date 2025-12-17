@@ -100,7 +100,25 @@ export default function NewOrderPage() {
   const onSubmit = async (data: OrderFormData) => {
     setIsSubmitting(true);
     try {
-      await createMutation.mutateAsync(data);
+      // Convert date to ISO datetime format and ensure numbers are proper types
+      const formattedData = {
+        ...data,
+        requiredDate: new Date(data.requiredDate).toISOString(),
+        taxRate: Number(data.taxRate),
+        shippingCost: Number(data.shippingCost),
+        discount: Number(data.discount),
+        shippingMethod: data.shippingMethod || undefined,
+        incoterms: data.incoterms || undefined,
+        notes: data.notes || undefined,
+        items: data.items.map(item => ({
+          ...item,
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unitPrice),
+          description: item.description || undefined,
+          hsCode: item.hsCode || undefined,
+        })),
+      };
+      await createMutation.mutateAsync(formattedData);
     } finally {
       setIsSubmitting(false);
     }
