@@ -68,7 +68,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               exit={{ opacity: 0 }}
               className="flex flex-col"
             >
-              <span className="text-lg font-bold tracking-tight">ElectroFlow</span>
+              <span className="text-lg font-bold tracking-tight">SANAF</span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
                 ERP System
               </span>

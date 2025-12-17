@@ -1,7 +1,7 @@
 {
-    "name": "electroflow-erp-backend",
+    "name": "sanaf-erp-backend",
     "version": "1.0.0",
-    "description": "Backend API for ElectroFlow ERP System",
+    "description": "Backend API for SANAF ERP System",
     "main": "dist/app.js",
     "scripts": {
       "dev": "tsx watch src/app.ts",

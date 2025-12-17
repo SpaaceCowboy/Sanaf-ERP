@@ -71,18 +71,18 @@ export default function LoginPage() {
                 <Zap className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">ElectroFlow</h1>
+                <h1 className="text-3xl font-bold">SANAF</h1>
                 <p className="text-sm text-muted-foreground">Enterprise Resource Planning</p>
               </div>
             </div>
 
             <h2 className="text-4xl font-bold mb-4 leading-tight">
-              Power your electronics<br />
-              <span className="text-gradient">manufacturing business</span>
+              Streamline your<br />
+              <span className="text-gradient">business operations</span>
             </h2>
 
             <p className="text-muted-foreground text-lg max-w-md">
-              Streamline orders, manage projects, track inventory, and automate export documentation — all in one place.
+              Manage orders, track projects, control inventory, and automate documentation — all in one powerful platform.
             </p>
 
             <div className="mt-12 grid grid-cols-2 gap-6">
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-electric-500 to-electric-700 flex items-center justify-center shadow-glow">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold">ElectroFlow</span>
+            <span className="text-2xl font-bold">SANAF</span>
           </div>
 
           <div className="text-center mb-8">
@@ -182,20 +182,22 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Demo credentials */}
-          <div className="mt-8 p-4 rounded-lg bg-muted/50 border border-border">
-            <p className="text-xs text-muted-foreground mb-2">Demo credentials:</p>
-            <div className="space-y-1 text-xs font-mono">
-              <p>
-                <span className="text-muted-foreground">Admin:</span>{' '}
-                admin@electroflow.com / Admin123!
-              </p>
-              <p>
-                <span className="text-muted-foreground">Manager:</span>{' '}
-                manager@electroflow.com / Manager123!
-              </p>
+          {/* Demo credentials - Only shown in development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-8 p-4 rounded-lg bg-muted/50 border border-border">
+              <p className="text-xs text-muted-foreground mb-2">Demo credentials:</p>
+              <div className="space-y-1 text-xs font-mono">
+                <p>
+                  <span className="text-muted-foreground">Admin:</span>{' '}
+                  admin@sanaf.com / Admin123!
+                </p>
+                <p>
+                  <span className="text-muted-foreground">Manager:</span>{' '}
+                  manager@sanaf.com / Manager123!
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </div>
