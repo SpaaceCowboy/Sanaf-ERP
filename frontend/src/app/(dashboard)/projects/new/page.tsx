@@ -79,7 +79,17 @@ export default function NewProjectPage() {
   const onSubmit = async (data: ProjectFormData) => {
     setIsSubmitting(true);
     try {
-      await createMutation.mutateAsync(data);
+      // Convert dates to ISO datetime format and ensure numbers are proper types
+      const formattedData = {
+        ...data,
+        startDate: new Date(data.startDate).toISOString(),
+        dueDate: new Date(data.dueDate).toISOString(),
+        estimatedHours: data.estimatedHours ? Number(data.estimatedHours) : undefined,
+        orderId: data.orderId || undefined,
+        description: data.description || undefined,
+        notes: data.notes || undefined,
+      };
+      await createMutation.mutateAsync(formattedData);
     } finally {
       setIsSubmitting(false);
     }
