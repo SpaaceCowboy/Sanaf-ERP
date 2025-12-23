@@ -92,6 +92,13 @@ export const updateOrderSchema = z.object({
   notes: z.string().optional(),
 });
 
+export const updateOrderStatusSchema = z.object({
+  status: z.enum(['DRAFT', 'CONFIRMED', 'IN_PRODUCTION', 'QUALITY_CHECK', 'READY_TO_SHIP', 'SHIPPED', 'DELIVERED', 'CANCELLED'], {
+    errorMap: () => ({ message: 'Invalid order status' }),
+  }),
+  notes: z.string().optional(),
+});
+
 // ==================== PROJECT SCHEMAS ====================
 
 export const createProjectSchema = z.object({

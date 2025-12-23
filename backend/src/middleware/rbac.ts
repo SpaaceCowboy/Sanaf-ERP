@@ -12,7 +12,7 @@ export function requireRole(...allowedRoles: Role[]) {
       return;
     }
     
-    if (!allowedRoles.includes(req.user.role)) {
+    if ( !allowedRoles.includes(req.user.role)) {
       res.status(403).json({ 
         error: 'Insufficient permissions',
         required: allowedRoles,

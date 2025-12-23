@@ -288,7 +288,7 @@ export const getSupplierStats = async (req: AuthenticatedRequest, res: Response)
 export const getSupplierCountries = async (_req: AuthenticatedRequest, res: Response) => {
   try {
     const countries = await prisma.supplier.findMany({
-      where: { country: { not: null } },
+      where: { country: { not: null as any } },
       select: { country: true },
       distinct: ['country'],
       orderBy: { country: 'asc' },

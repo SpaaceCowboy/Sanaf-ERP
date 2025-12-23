@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
   getDashboardStats,
-  getOrdersReport,
+  getOrderReport,
   getInventoryReport,
-  getProjectsReport,
+  getProjectReport,
   getFinancialReport,
 } from '../controllers/reportController';
 import { authenticate } from '../middleware/auth';
@@ -16,9 +16,9 @@ router.use(authenticate);
 
 // Dashboard and reports
 router.get('/dashboard', requirePermission('reports:view'), getDashboardStats);
-router.get('/orders', requirePermission('reports:view'), getOrdersReport);
+router.get('/orders', requirePermission('reports:view'), getOrderReport);
 router.get('/inventory', requirePermission('reports:view'), getInventoryReport);
-router.get('/projects', requirePermission('reports:view'), getProjectsReport);
+router.get('/projects', requirePermission('reports:view'), getProjectReport);
 router.get('/financial', requirePermission('reports:view'), getFinancialReport);
 
 export default router;

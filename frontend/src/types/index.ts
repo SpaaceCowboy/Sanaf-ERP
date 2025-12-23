@@ -35,6 +35,7 @@ export interface Customer {
   taxId?: string;
   notes?: string;
   createdAt: string;
+  companyName: string
 }
 
 export interface OrderItem {
@@ -149,6 +150,7 @@ export interface Supplier {
   address?: string;
   country?: string;
   notes?: string;
+  companyName: string
 }
 
 export interface InventoryItem {

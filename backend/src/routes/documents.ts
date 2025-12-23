@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   getDocuments,
   getDocumentById,
-  generateDocument,
+  generateInvoice,
   downloadDocument,
   deleteDocument,
   getDocumentTypes,
@@ -20,7 +20,7 @@ router.use(authenticate);
 router.get('/', requirePermission('documents:read'), validate(paginationSchema, 'query'), getDocuments);
 router.get('/types', requirePermission('documents:read'), getDocumentTypes);
 router.get('/:id', requirePermission('documents:read'), validate(idParamSchema, 'params'), getDocumentById);
-router.post('/generate', requirePermission('documents:generate'), generateDocument);
+router.post('/generate', requirePermission('documents:generate'), generateInvoice);
 router.get('/:id/download', requirePermission('documents:read'), validate(idParamSchema, 'params'), downloadDocument);
 router.delete('/:id', requirePermission('documents:delete'), validate(idParamSchema, 'params'), deleteDocument);
 

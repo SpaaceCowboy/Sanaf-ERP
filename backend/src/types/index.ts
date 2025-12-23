@@ -15,6 +15,8 @@ export interface AuthenticatedRequest extends Request {
 
 // ==================== PAGINATION ====================
 
+
+
 export interface PaginationParams {
   page?: number;
   limit?: number;
@@ -132,6 +134,13 @@ export interface UpdateProjectDto {
   notes?: string;
 }
 
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+
 export interface CreateTaskDto {
   title: string;
   description?: string;
@@ -155,11 +164,6 @@ export interface UpdateTaskDto {
   checklistItems?: ChecklistItem[];
 }
 
-export interface ChecklistItem {
-  id: string;
-  text: string;
-  completed: boolean;
-}
 
 // ==================== INVENTORY TYPES ====================
 

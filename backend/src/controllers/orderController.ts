@@ -401,3 +401,137 @@ export async function getOrderStats(req: AuthenticatedRequest, res: Response): P
     res.status(500).json({ error: 'Failed to fetch order stats' });
   }
 }
+
+export async function updateOrderStatus(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { status, notes } = req.body;
+
+    // Validate status
+    const validStatuses = ['DRAFT', 'CONFIRMED', 'IN_PRODUCTION', 'QUALITY_CHECK', 'READY_TO_SHIP', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+    if (!validStatuses.includes(status)) {
+      res.status(400).json({ error: 'Invalid status' });
+      return;
+    }
+
+    // Get current order
+    const currentOrder = await prisma.order.findUnique({
+      where: { id },
+    });
+
+    if (!currentOrder) {
+      res.status(404).json({ error: 'Order not found' });
+      return;
+    }
+
+    // Update order status
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        status: status as any,
+        ...(status === 'SHIPPED' && { shippedDate: new Date() }),
+        ...(status === 'DELIVERED' && { deliveredDate: new Date() }),
+      },
+      select: {
+        id: true,
+        orderNumber: true,
+        status: true,
+        shippedDate: true,
+        deliveredDate: true,
+        updatedAt: true,
+      },
+    });
+
+    // Log audit
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user!.userId,
+        action: 'UPDATE_STATUS',
+        entity: 'Order',
+        entityId: id,
+        oldValues: { status: currentOrder.status },
+        newValues: { status },
+        notes,
+      },
+    });
+
+    res.json({
+      message: 'Order status updated successfully',
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error('Update order status error:', error);
+    res.status(500).json({ error: 'Failed to update order status' });
+  }
+}
+
+export async function generateOrderInvoice(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    // Get order with items
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        customer: true,
+        items: {
+          include: {
+            inventoryItem: true,
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      res.status(404).json({ error: 'Order not found' });
+      return;
+    }
+
+    // Generate invoice number
+    const invoiceNumber = `INV-${order.orderNumber}-${Date.now()}`;
+
+    // Create invoice document (this would typically generate a PDF)
+    // For now, we'll create a basic document record
+    const document = await prisma.document.create({
+      data: {
+        documentNumber: invoiceNumber,
+        type: 'INVOICE',
+        orderId: id,
+        generatedById: req.user!.userId,
+        fileName: `${invoiceNumber}.pdf`,
+        filePath: `/documents/${invoiceNumber}.pdf`,
+        fileSize: 0, // Would be set after PDF generation
+        metadata: {
+          orderNumber: order.orderNumber,
+          customerName: order.customer.companyName,
+          totalAmount: order.totalAmount,
+          currency: 'USD',
+        },
+      },
+    });
+
+    // Log audit
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user!.userId,
+        action: 'GENERATE_INVOICE',
+        entity: 'Order',
+        entityId: id,
+        newValues: { documentId: document.id, invoiceNumber },
+      },
+    });
+
+    res.json({
+      message: 'Invoice generated successfully',
+      document: {
+        id: document.id,
+        documentNumber: document.documentNumber,
+        fileName: document.fileName,
+        createdAt: document.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('Generate invoice error:', error);
+    res.status(500).json({ error: 'Failed to generate invoice' });
+  }
+}

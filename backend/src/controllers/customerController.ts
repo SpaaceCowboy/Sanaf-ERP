@@ -303,7 +303,7 @@ export const getCustomerStats = async (req: AuthenticatedRequest, res: Response)
 export const getCountries = async (_req: AuthenticatedRequest, res: Response) => {
   try {
     const countries = await prisma.customer.findMany({
-      where: { country: { not: null } },
+      where: { country: { not: null as any } },
       select: { country: true },
       distinct: ['country'],
       orderBy: { country: 'asc' },
