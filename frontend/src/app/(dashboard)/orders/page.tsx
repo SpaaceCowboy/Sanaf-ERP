@@ -49,14 +49,14 @@ import { cn, formatCurrency, formatDate, getStatusColor } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 
 const statusOptions: { value: OrderStatus | 'ALL'; label: string }[] = [
-  { value: 'ALL', label: 'All Statuses' },
-  { value: 'DRAFT', label: 'Draft' },
-  { value: 'CONFIRMED', label: 'Confirmed' },
-  { value: 'IN_PRODUCTION', label: 'In Production' },
-  { value: 'READY', label: 'Ready' },
-  { value: 'SHIPPED', label: 'Shipped' },
-  { value: 'DELIVERED', label: 'Delivered' },
-  { value: 'CANCELLED', label: 'Cancelled' },
+  { value: 'ALL', label: 'همه وضعیت ها' },
+  { value: 'DRAFT', label: 'پیش نویس' },
+  { value: 'CONFIRMED', label: 'تایید شد' },
+  { value: 'IN_PRODUCTION', label: 'در تولید' },
+  { value: 'READY', label: 'آماده است' },
+  { value: 'SHIPPED', label: 'رسال شد' },
+  { value: 'DELIVERED', label: 'تحویل داده شد' },
+  { value: 'CANCELLED', label: 'لغو شد' },
 ];
 
 export default function OrdersPage() {
@@ -107,16 +107,16 @@ export default function OrdersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
+          <h1 className="text-3xl font-bold tracking-tight">سفارشات</h1>
           <p className="text-muted-foreground mt-1">
-            Manage customer orders and track their status
+            مدیریت سفارشات مشتریان و پیگیری وضعیت آنها
           </p>
         </div>
         {hasPermission('orders:write') && (
           <Button asChild>
             <Link href="/orders/new">
               <Plus className="w-4 h-4 mr-2" />
-              New Order
+              سفارش جدید
             </Link>
           </Button>
         )}
@@ -128,7 +128,7 @@ export default function OrdersPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search orders..."
+                placeholder="جستجوی سفارشات..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 icon={<Search className="w-4 h-4" />}
@@ -161,13 +161,13 @@ export default function OrdersPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Order #</th>
-                  <th>Customer</th>
-                  <th>Status</th>
-                  <th>Items</th>
-                  <th>Total</th>
-                  <th>Date</th>
-                  <th className="text-right">Actions</th>
+                  <th>سفارش دهید #</th>
+                  <th>مشتری</th>
+                  <th>وضعیت</th>
+                  <th>موارد</th>
+                  <th>مجموع</th>
+                  <th>تاریخ</th>
+                  <th className="text-right">اقدامات</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,7 +182,7 @@ export default function OrdersPage() {
                 ) : orders.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center py-12">
-                      <p className="text-muted-foreground">No orders found</p>
+                      <p className="text-muted-foreground">هیچ سفارشی یافت نشد</p>
                     </td>
                   </tr>
                 ) : (
@@ -233,14 +233,14 @@ export default function OrdersPage() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/orders/${order.id}`}>
                                   <Eye className="w-4 h-4 mr-2" />
-                                  View Details
+                                  مشاهده جزئیات
                                 </Link>
                               </DropdownMenuItem>
                               {hasPermission('orders:write') && (
                                 <DropdownMenuItem asChild>
                                   <Link href={`/orders/${order.id}/edit`}>
                                     <Edit className="w-4 h-4 mr-2" />
-                                    Edit
+                                    ویرایش کنید
                                   </Link>
                                 </DropdownMenuItem>
                               )}
@@ -248,12 +248,12 @@ export default function OrdersPage() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/documents?orderId=${order.id}`}>
                                   <FileText className="w-4 h-4 mr-2" />
-                                  Documents
+                                  اسناد
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem>
                                 <Download className="w-4 h-4 mr-2" />
-                                Export
+                                صادرات
                               </DropdownMenuItem>
                               {hasPermission('orders:delete') && (
                                 <>
@@ -263,7 +263,7 @@ export default function OrdersPage() {
                                     onClick={() => handleDelete(order)}
                                   >
                                     <Trash2 className="w-4 h-4 mr-2" />
-                                    Delete
+                                    حذف کنید
                                   </DropdownMenuItem>
                                 </>
                               )}
@@ -315,23 +315,23 @@ export default function OrdersPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Order</DialogTitle>
+            <DialogTitle>سفارش را حذف کنید</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete order{' '}
+              آیا از حذف سفارش مطمئن هستید؟{' '}
               <span className="font-mono font-medium">{orderToDelete?.orderNumber}</span>?
               This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
+              لغو کنید
             </Button>
             <Button
               variant="destructive"
               onClick={confirmDelete}
               loading={deleteMutation.isPending}
             >
-              Delete
+              حذف کنید
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -46,37 +46,37 @@ import { useAuth } from '@/hooks/useAuth';
 const documentTypes: { value: DocumentType; label: string; icon: React.ReactNode; description: string }[] = [
   {
     value: 'INVOICE',
-    label: 'Invoice',
+    label: 'فاکتور',
     icon: <Receipt className="w-5 h-5" />,
     description: 'Standard commercial invoice',
   },
   {
     value: 'PROFORMA_INVOICE',
-    label: 'Proforma Invoice',
+    label: 'فاکتور پروفرما',
     icon: <FileClock className="w-5 h-5" />,
     description: 'Preliminary invoice before shipment',
   },
   {
     value: 'PACKING_LIST',
-    label: 'Packing List',
+    label: 'لیست بسته بندی',
     icon: <Package className="w-5 h-5" />,
     description: 'Detailed list of package contents',
   },
   {
     value: 'COMMERCIAL_INVOICE',
-    label: 'Commercial Invoice',
+    label: 'فاکتور تجاری',
     icon: <FileCheck className="w-5 h-5" />,
     description: 'For customs and export purposes',
   },
   {
     value: 'EXPORT_DECLARATION',
-    label: 'Export Declaration',
+    label: 'اعلامیه صادرات',
     icon: <Globe className="w-5 h-5" />,
     description: 'Official export documentation',
   },
   {
     value: 'CERTIFICATE_OF_ORIGIN',
-    label: 'Certificate of Origin',
+    label: 'گواهی مبدا',
     icon: <FileText className="w-5 h-5" />,
     description: 'Product origin certification',
   },
@@ -117,14 +117,14 @@ function GenerateDocumentDialog({ orderId }: { orderId?: string }) {
       <DialogTrigger asChild>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Generate Document
+          ایجاد سند
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Generate Document</DialogTitle>
+          <DialogTitle>ایجاد سند</DialogTitle>
           <DialogDescription>
-            Select a document type to generate for the selected order
+            نوع سندی را برای تولید برای سفارش انتخاب شده انتخاب کنید
           </DialogDescription>
         </DialogHeader>
 
@@ -155,14 +155,14 @@ function GenerateDocumentDialog({ orderId }: { orderId?: string }) {
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
+            لغو کنید
           </Button>
           <Button
             onClick={handleGenerate}
             disabled={!selectedType || !orderId}
             loading={generateMutation.isPending}
           >
-            Generate
+            ایجاد کنید                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -204,9 +204,9 @@ export default function DocumentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
+          <h1 className="text-3xl font-bold tracking-tight">اسناد</h1>
           <p className="text-muted-foreground mt-1">
-            Generate and manage export documentation and invoices
+            ایجاد و مدیریت اسناد و فاکتورهای صادراتی
           </p>
         </div>
         {hasPermission('documents:write') && (
@@ -249,7 +249,7 @@ export default function DocumentsPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search documents..."
+                placeholder="جستجوی اسناد..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 icon={<Search className="w-4 h-4" />}
@@ -264,7 +264,7 @@ export default function DocumentsPage() {
                 <SelectValue placeholder="Document Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Types</SelectItem>
+                <SelectItem value="ALL">همه انواع</SelectItem>
                 {documentTypes.map((type) => (
                   <SelectItem key={type.value} value={type.value}>
                     {type.label}
@@ -283,12 +283,12 @@ export default function DocumentsPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Document</th>
-                  <th>Type</th>
-                  <th>Order</th>
-                  <th>Generated By</th>
-                  <th>Date</th>
-                  <th className="text-right">Actions</th>
+                  <th>سند</th>
+                  <th>انواع</th>
+                  <th>سفارش </th>
+                  <th>تولید شده توسط</th>
+                  <th>تاریخ</th>
+                  <th className="text-right">اقدامات</th>
                 </tr>
               </thead>
               <tbody>
@@ -304,9 +304,9 @@ export default function DocumentsPage() {
                   <tr>
                     <td colSpan={6} className="text-center py-12">
                       <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground">No documents found</p>
+                      <p className="text-muted-foreground">هیچ سندی یافت نشد</p>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Generate documents from orders to see them here
+                        برای مشاهده اسناد از سفارشات، آنها را اینجا ایجاد کنید
                       </p>
                     </td>
                   </tr>
@@ -398,7 +398,7 @@ export default function DocumentsPage() {
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
                 >
-                  Previous
+                  قبلی
                 </Button>
                 <Button
                   variant="outline"
@@ -406,7 +406,7 @@ export default function DocumentsPage() {
                   onClick={() => setPage(page + 1)}
                   disabled={page === pagination.totalPages}
                 >
-                  Next
+                  بعدی
                 </Button>
               </div>
             </div>

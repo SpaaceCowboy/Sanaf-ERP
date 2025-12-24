@@ -43,12 +43,12 @@ import { cn, formatCurrency, formatNumber, getInventoryTypeColor } from '@/lib/u
 import { useAuth } from '@/hooks/useAuth';
 
 const typeOptions: { value: InventoryType | 'ALL'; label: string }[] = [
-  { value: 'ALL', label: 'All Types' },
-  { value: 'RAW_MATERIAL', label: 'Raw Materials' },
-  { value: 'COMPONENT', label: 'Components' },
-  { value: 'FINISHED_GOOD', label: 'Finished Goods' },
-  { value: 'PACKAGING', label: 'Packaging' },
-  { value: 'CONSUMABLE', label: 'Consumables' },
+  { value: 'ALL', label: 'همه انواع' },
+  { value: 'RAW_MATERIAL', label: 'مواد اولیه' },
+  { value: 'COMPONENT', label: 'اجزاء' },
+  { value: 'FINISHED_GOOD', label: 'کالاهای تمام شده' },
+  { value: 'PACKAGING', label: 'بسته بندی' },
+  { value: 'CONSUMABLE', label: 'مواد مصرفی' },
 ];
 
 function StockIndicator({ item }: { item: InventoryItem }) {
@@ -111,9 +111,9 @@ export default function InventoryPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
+          <h1 className="text-3xl font-bold tracking-tight">موجودی</h1>
           <p className="text-muted-foreground mt-1">
-            Manage raw materials, components, and finished goods
+            مدیریت مواد اولیه، قطعات و کالاهای نهایی
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -122,13 +122,13 @@ export default function InventoryPage() {
               <Button variant="outline" asChild>
                 <Link href="/inventory/movements">
                   <ArrowDownCircle className="w-4 h-4 mr-2" />
-                  Record Movement
+                  انتقال رکورد
                 </Link>
               </Button>
               <Button asChild>
                 <Link href="/inventory/new">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Item
+                   اضافه کردن ایتم
                 </Link>
               </Button>
             </>
@@ -145,7 +145,7 @@ export default function InventoryPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{formatNumber(stats?.totalItems || 0)}</p>
-              <p className="text-xs text-muted-foreground">Total Items</p>
+              <p className="text-xs text-muted-foreground">مجموع اقلام</p>
             </div>
           </CardContent>
         </Card>
@@ -156,7 +156,7 @@ export default function InventoryPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{formatCurrency(stats?.totalValue || 0)}</p>
-              <p className="text-xs text-muted-foreground">Total Value</p>
+              <p className="text-xs text-muted-foreground">ارزش کل</p>
             </div>
           </CardContent>
         </Card>
@@ -167,7 +167,7 @@ export default function InventoryPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{stats?.lowStockCount || 0}</p>
-              <p className="text-xs text-muted-foreground">Low Stock Items</p>
+              <p className="text-xs text-muted-foreground">اقلام کم موجودی</p>
             </div>
           </CardContent>
         </Card>
@@ -180,7 +180,7 @@ export default function InventoryPage() {
               <p className="text-sm font-medium">
                 {showLowStock ? 'Show All' : 'Show Low Stock'}
               </p>
-              <p className="text-xs text-muted-foreground">Click to toggle</p>
+              <p className="text-xs text-muted-foreground">برای تغییر وضعیت کلیک کنید</p>
             </div>
           </CardContent>
         </Card>
@@ -192,7 +192,7 @@ export default function InventoryPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search by name, SKU..."
+                placeholder="جستجو بر اساس نام ..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 icon={<Search className="w-4 h-4" />}
@@ -225,13 +225,13 @@ export default function InventoryPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Item</th>
+                  <th>مورد</th>
                   <th>SKU</th>
-                  <th>Type</th>
-                  <th>Stock Level</th>
-                  <th>Unit Cost</th>
-                  <th>Location</th>
-                  <th className="text-right">Actions</th>
+                  <th>انواع</th>
+                  <th>موجودی انبار</th>
+                  <th>هزینه واحد</th>
+                  <th>مکان</th>
+                  <th className="text-right">اقدامات</th>
                 </tr>
               </thead>
               <tbody>
@@ -246,7 +246,7 @@ export default function InventoryPage() {
                 ) : items.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center py-12">
-                      <p className="text-muted-foreground">No inventory items found</p>
+                      <p className="text-muted-foreground">هیچ مورد موجودی یافت نشد</p>
                     </td>
                   </tr>
                 ) : (
@@ -305,7 +305,7 @@ export default function InventoryPage() {
                                 <DropdownMenuItem asChild>
                                   <Link href={`/inventory/${item.id}`}>
                                     <Eye className="w-4 h-4 mr-2" />
-                                    View Details
+                                    مشاهده جزئیات
                                   </Link>
                                 </DropdownMenuItem>
                                 {hasPermission('inventory:write') && (
@@ -313,17 +313,17 @@ export default function InventoryPage() {
                                     <DropdownMenuItem asChild>
                                       <Link href={`/inventory/${item.id}/edit`}>
                                         <Edit className="w-4 h-4 mr-2" />
-                                        Edit
+                                        ویرایش کنید
                                       </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
                                       <ArrowDownCircle className="w-4 h-4 mr-2" />
-                                      Record Import
+                                      رکورد واردات
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                       <ArrowUpCircle className="w-4 h-4 mr-2" />
-                                      Record Export
+                                      رکورد صادرات
                                     </DropdownMenuItem>
                                   </>
                                 )}
@@ -332,7 +332,7 @@ export default function InventoryPage() {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem className="text-danger-400">
                                       <Trash2 className="w-4 h-4 mr-2" />
-                                      Delete
+                                      حذف کنید
                                     </DropdownMenuItem>
                                   </>
                                 )}
@@ -362,7 +362,7 @@ export default function InventoryPage() {
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
                 >
-                  Previous
+                  قبلی
                 </Button>
                 <Button
                   variant="outline"
@@ -370,7 +370,7 @@ export default function InventoryPage() {
                   onClick={() => setPage(page + 1)}
                   disabled={page === pagination.totalPages}
                 >
-                  Next
+                  بعدی
                 </Button>
               </div>
             </div>

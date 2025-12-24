@@ -22,14 +22,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, permission: null },
-  { name: 'Orders', href: '/orders', icon: ShoppingCart, permission: 'orders:read' },
-  { name: 'Projects', href: '/projects', icon: FolderKanban, permission: 'projects:read' },
-  { name: 'Inventory', href: '/inventory', icon: Package, permission: 'inventory:read' },
-  { name: 'Documents', href: '/documents', icon: FileText, permission: 'documents:read' },
-  { name: 'Reports', href: '/reports', icon: BarChart3, permission: 'reports:read' },
-  { name: 'Users', href: '/users', icon: Users, permission: 'users:read' },
-  { name: 'Settings', href: '/settings', icon: Settings, permission: null },
+  { name: 'داشبورد', href: '/dashboard', icon: LayoutDashboard, permission: null },
+  { name: 'سفارشات', href: '/orders', icon: ShoppingCart, permission: 'orders:read' },
+  { name: 'پروژه ها', href: '/projects', icon: FolderKanban, permission: 'projects:read' },
+  { name: 'موجودی', href: '/inventory', icon: Package, permission: 'inventory:read' },
+  { name: 'اسناد', href: '/documents', icon: FileText, permission: 'documents:read' },
+  { name: 'گزارش ها', href: '/reports', icon: BarChart3, permission: 'reports:read' },
+  { name: 'کاربران', href: '/users', icon: Users, permission: 'users:read' },
+  { name: 'تنظیمات', href: '/settings', icon: Settings, permission: null },
 ];
 
 interface SidebarProps {
@@ -70,7 +70,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             >
               <span className="text-lg font-bold tracking-tight">SANAF</span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                ERP System
+                سیستم ERP
               </span>
             </motion.div>
           )}
@@ -136,7 +136,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           ) : (
             <>
               <ChevronLeft className="w-4 h-4 mr-2" />
-              <span>Collapse</span>
+              <span>فرو ریختن</span>
             </>
           )}
         </Button>

@@ -39,8 +39,8 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
       <div className="flex items-center gap-4 flex-1 max-w-xl">
         <div className="relative flex-1">
           <Input
-            placeholder="Search orders, projects, inventory..."
-            className="pl-10 bg-muted/50 border-transparent focus:bg-background"
+            placeholder="جستجوی سفارشات، پروژه‌ها، موجودی..."
+            className=" pl-10 bg-muted/50 border-transparent focus:bg-background"
             icon={<Search className="w-4 h-4" />}
           />
         </div>
@@ -75,20 +75,20 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>حساب من</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push('/settings')}>
               <User className="w-4 h-4 mr-2" />
-              Profile
+              نمایه
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push('/settings')}>
               <Settings className="w-4 h-4 mr-2" />
-              Settings
+              تنظیمات
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-danger-400">
               <LogOut className="w-4 h-4 mr-2" />
-              Logout
+              خروج از سیستم
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

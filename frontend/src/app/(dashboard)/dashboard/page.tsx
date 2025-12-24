@@ -47,17 +47,17 @@ const revenueData = [
 ];
 
 const orderStatusData = [
-  { name: 'Confirmed', value: 35, color: '#3b82f6' },
-  { name: 'In Production', value: 28, color: '#eab308' },
-  { name: 'Shipped', value: 22, color: '#16b378' },
-  { name: 'Delivered', value: 45, color: '#22c55e' },
+  { name: 'تایید شد', value: 35, color: '#3b82f6' },
+  { name: 'در تولید', value: 28, color: '#eab308' },
+  { name: 'ارسال شد', value: 22, color: '#16b378' },
+  { name: 'تحویل داده شد', value: 45, color: '#22c55e' },
 ];
 
 const inventoryByTypeData = [
-  { type: 'Raw Materials', count: 450, value: 125000 },
-  { type: 'Components', count: 320, value: 89000 },
-  { type: 'Finished Goods', count: 180, value: 234000 },
-  { type: 'Packaging', count: 95, value: 12000 },
+  { type: 'مواد اولیه', count: 450, value: 125000 },
+  { type: 'اجزاء', count: 320, value: 89000 },
+  { type: 'کالاهای تمام شده', count: 180, value: 234000 },
+  { type: 'بسته بندی', count: 95, value: 12000 },
 ];
 
 interface StatCardProps {
@@ -134,14 +134,14 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">داشبورد</h1>
           <p className="text-muted-foreground mt-1">
-            Overview of your business performance
+            بررسی اجمالی عملکرد کسب و کار شما
           </p>
         </div>
         <Button asChild>
           <Link href="/reports">
-            View Reports
+            مشاهده گزارش ها
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Revenue Trend
+                روند درآمد
                 <Badge variant="success">+8.5%</Badge>
               </CardTitle>
             </CardHeader>
@@ -257,7 +257,7 @@ export default function DashboardPage() {
         >
           <Card className="h-full">
             <CardHeader>
-              <CardTitle>Orders by Status</CardTitle>
+              <CardTitle>سفارشات بر اساس وضعیت</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-[200px]">
@@ -314,7 +314,7 @@ export default function DashboardPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Inventory by Type</CardTitle>
+              <CardTitle>موجودی بر اساس نوع</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-[250px]">
@@ -353,7 +353,7 @@ export default function DashboardPage() {
         >
           <Card className="h-full">
             <CardHeader>
-              <CardTitle>Alerts & Tasks</CardTitle>
+              <CardTitle>هشدارها و وظایف</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Low Stock Alert */}
@@ -362,12 +362,12 @@ export default function DashboardPage() {
                   <AlertTriangle className="w-5 h-5 text-volt-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-volt-300">Low Stock Alert</p>
+                  <p className="font-medium text-volt-300">هشدار کم سهام</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    23 items are below minimum stock level
+                    ۲۳ قلم کالا کمتر از حداقل موجودی هستند  
                   </p>
                   <Button variant="link" size="sm" className="px-0 mt-2 text-volt-400" asChild>
-                    <Link href="/inventory?filter=low-stock">View Items →</Link>
+                    <Link href="/inventory?filter=low-stock">مشاهده موارد →</Link>
                   </Button>
                 </div>
               </div>
@@ -378,12 +378,12 @@ export default function DashboardPage() {
                   <Clock className="w-5 h-5 text-danger-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-danger-300">Overdue Projects</p>
+                  <p className="font-medium text-danger-300">پروژه های معوقه</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    5 projects have passed their due date
+                    ۵ پروژه از مهلت مقرر خود گذشته‌اند
                   </p>
                   <Button variant="link" size="sm" className="px-0 mt-2 text-danger-400" asChild>
-                    <Link href="/projects?filter=overdue">View Projects →</Link>
+                    <Link href="/projects?filter=overdue">مشاهده پروژه ها →</Link>
                   </Button>
                 </div>
               </div>
@@ -391,12 +391,12 @@ export default function DashboardPage() {
               {/* Progress Summary */}
               <div className="p-4 rounded-lg bg-muted/30 border border-border">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium">Monthly Target</p>
+                  <p className="text-sm font-medium">هدف ماهانه</p>
                   <span className="text-sm text-muted-foreground">78%</span>
                 </div>
                 <Progress value={78} className="h-2" />
                 <p className="text-xs text-muted-foreground mt-2">
-                  $156,000 of $200,000 target achieved
+                  ۱۵۶۰۰۰ دلار از ۲۰۰۰۰۰ دلار هدف محقق شد
                 </p>
               </div>
             </CardContent>

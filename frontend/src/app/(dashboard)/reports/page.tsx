@@ -63,10 +63,10 @@ const ordersByCountry = [
 ];
 
 const inventoryByCategory = [
-  { name: 'Electronics', value: 35, color: '#3b82f6' },
-  { name: 'Components', value: 28, color: '#16b378' },
-  { name: 'Raw Materials', value: 22, color: '#eab308' },
-  { name: 'Packaging', value: 15, color: '#6366f1' },
+  { name: 'الکترونیک', value: 35, color: '#3b82f6' },
+  { name: 'اجزاء', value: 28, color: '#16b378' },
+  { name: 'مواد اولیه', value: 22, color: '#eab308' },
+  { name: 'بسته بندی', value: 15, color: '#6366f1' },
 ];
 
 const projectPerformance = [
@@ -87,10 +87,10 @@ const topProducts = [
 ];
 
 const reportTypes = [
-  { id: 'orders', label: 'Orders Report', icon: ShoppingCart, description: 'Order trends and analysis' },
-  { id: 'inventory', label: 'Inventory Report', icon: Package, description: 'Stock levels and movements' },
-  { id: 'financial', label: 'Financial Report', icon: DollarSign, description: 'Revenue and expenses' },
-  { id: 'projects', label: 'Projects Report', icon: FileText, description: 'Project performance metrics' },
+  { id: 'orders', label: 'گزارش سفارشات', icon: ShoppingCart, description: 'سفارش روندها و تجزیه و تحلیل' },
+  { id: 'inventory', label: 'گزارش موجودی', icon: Package, description: 'سطوح و حرکات سهام' },
+  { id: 'financial', label: 'گزارش مالی', icon: DollarSign, description: 'درآمد و هزینه‌ها' },
+  { id: 'projects', label: 'گزارش پروژه ها', icon: FileText, description: 'معیارهای عملکرد پروژه' },
 ];
 
 export default function ReportsPage() {
@@ -107,9 +107,9 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+          <h1 className="text-3xl font-bold tracking-tight">گزارش ها</h1>
           <p className="text-muted-foreground mt-1">
-            Analytics and insights for your business
+            تحلیل‌ها و بینش‌هایی برای کسب و کار شما
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -119,15 +119,15 @@ export default function ReportsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1m">Last Month</SelectItem>
-              <SelectItem value="3m">Last 3 Months</SelectItem>
-              <SelectItem value="6m">Last 6 Months</SelectItem>
-              <SelectItem value="1y">Last Year</SelectItem>
+              <SelectItem value="1m">ماه گذشته</SelectItem>
+              <SelectItem value="3m">۳ ماه گذشته</SelectItem>
+              <SelectItem value="6m">۶ ماه گذشته</SelectItem>
+              <SelectItem value="1y">سال گذشته</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline">
             <Download className="w-4 h-4 mr-2" />
-            Export
+            صادرات
           </Button>
         </div>
       </div>
@@ -188,9 +188,9 @@ export default function ReportsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-electric-400" />
-                Revenue vs Target
+                درآمد در مقابل هدف
               </CardTitle>
-              <CardDescription>Monthly revenue compared to targets</CardDescription>
+              <CardDescription>درآمد ماهانه در مقایسه با اهداف</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
@@ -254,9 +254,9 @@ export default function ReportsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="w-5 h-5 text-circuit-400" />
-                Orders by Country
+                سفارشات بر اساس کشور
               </CardTitle>
-              <CardDescription>Geographic distribution of orders</CardDescription>
+              <CardDescription>توزیع جغرافیایی سفارشات</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
@@ -298,8 +298,8 @@ export default function ReportsPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Inventory Distribution</CardTitle>
-              <CardDescription>Stock by category</CardDescription>
+              <CardTitle>توزیع موجودی</CardTitle>
+              <CardDescription>سهام بر اساس دسته بندی</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[250px]">
@@ -354,8 +354,8 @@ export default function ReportsPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Project Performance</CardTitle>
-              <CardDescription>On-time vs delayed project completions</CardDescription>
+              <CardTitle>عملکرد پروژه</CardTitle>
+              <CardDescription>تکمیل به موقع پروژه در مقابل تکمیل با تأخیر</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[250px]">
@@ -390,18 +390,18 @@ export default function ReportsPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Top Products</CardTitle>
-            <CardDescription>Best performing products by orders and revenue</CardDescription>
+            <CardTitle>محصولات برتر</CardTitle>
+            <CardDescription>محصولات با بهترین عملکرد بر اساس سفارش و درآمد</CardDescription>
           </CardHeader>
           <CardContent>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Rank</th>
-                  <th>Product</th>
-                  <th>Orders</th>
-                  <th>Revenue</th>
-                  <th>% of Total</th>
+                  <th>رتبه</th>
+                  <th>محصول</th>
+                  <th>سفارشات</th>
+                  <th>درآمد</th>
+                  <th>% از کل</th>
                 </tr>
               </thead>
               <tbody>

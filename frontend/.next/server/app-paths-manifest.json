@@ -1,8 +1,4 @@
 {
-  "/(dashboard)/inventory/page": "app/(dashboard)/inventory/page.js",
-  "/(dashboard)/users/page": "app/(dashboard)/users/page.js",
-  "/(dashboard)/projects/page": "app/(dashboard)/projects/page.js",
-  "/(dashboard)/settings/page": "app/(dashboard)/settings/page.js",
   "/(dashboard)/orders/page": "app/(dashboard)/orders/page.js",
-  "/(dashboard)/inventory/new/page": "app/(dashboard)/inventory/new/page.js"
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js"
 }

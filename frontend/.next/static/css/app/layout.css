@@ -1707,9 +1707,6 @@ code, pre, kbd, samp {
 .uppercase{
   text-transform: uppercase;
 }
-.lowercase{
-  text-transform: lowercase;
-}
 .capitalize{
   text-transform: capitalize;
 }

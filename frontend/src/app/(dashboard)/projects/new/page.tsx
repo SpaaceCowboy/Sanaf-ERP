@@ -17,12 +17,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/useToast';
 
 const projectSchema = z.object({
-  name: z.string().min(1, 'Project name is required'),
+  name: z.string().min(1, 'نام پروژه الزامی است'),
   description: z.string().optional(),
   orderId: z.string().optional(),
-  managerId: z.string().min(1, 'Manager is required'),
-  startDate: z.string().min(1, 'Start date is required'),
-  dueDate: z.string().min(1, 'Due date is required'),
+  managerId: z.string().min(1, 'مدیر مورد نیاز است'),
+  startDate: z.string().min(1, 'تاریخ شروع الزامی است'),
+  dueDate: z.string().min(1, 'تاریخ سررسید الزامی است'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
   estimatedHours: z.coerce.number().min(0).optional(),
   notes: z.string().optional(),
@@ -62,15 +62,15 @@ export default function NewProjectPage() {
     mutationFn: projectsApi.create,
     onSuccess: () => {
       toast({
-        title: 'Success',
-        description: 'Project created successfully',
+        title: 'موفقیت',
+        description: 'پروژه با موفقیت ایجاد شد',
       });
       router.push('/projects');
     },
     onError: (error: any) => {
       toast({
         title: 'Error',
-        description: error.response?.data?.error || 'Failed to create project',
+        description: error.response?.data?.error || 'ایجاد پروژه ناموفق بود',
         variant: 'destructive',
       });
     },
@@ -103,12 +103,12 @@ export default function NewProjectPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/projects">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              برگشت
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Project</h1>
-            <p className="text-muted-foreground mt-1">Create a new project</p>
+            <h1 className="text-3xl font-bold tracking-tight">ایجاد پروژه</h1>
+            <p className="text-muted-foreground mt-1">یک پروژه جدید ایجاد کنید</p>
           </div>
         </div>
       </div>
@@ -122,35 +122,35 @@ export default function NewProjectPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FolderKanban className="w-5 h-5" />
-                  Project Information
+                  اطلاعات پروژه
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Project Name *</Label>
+                  <Label htmlFor="name">نام پروژه *</Label>
                   <Input
                     id="name"
-                    placeholder="e.g., Q4 Production Run"
+                    placeholder="جرای تولید"
                     error={errors.name?.message}
                     {...register('name')}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">توضیحات</Label>
                   <Input
                     id="description"
-                    placeholder="Brief project description"
+                    placeholder="شرح مختصر پروژه"
                     {...register('description')}
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="managerId">Project Manager *</Label>
+                    <Label htmlFor="managerId">مدیر پروژه *</Label>
                     <Select onValueChange={(value) => setValue('managerId', value)}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select manager" />
+                        <SelectValue placeholder="مدیر را انتخاب کنید" />
                       </SelectTrigger>
                       <SelectContent>
                         {users?.data?.map((user) => (
@@ -169,7 +169,7 @@ export default function NewProjectPage() {
                     <Label htmlFor="orderId">Linked Order (Optional)</Label>
                     <Select onValueChange={(value) => setValue('orderId', value)}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select order" />
+                        <SelectValue placeholder="سفارش را انتخاب کنید" />
                       </SelectTrigger>
                       <SelectContent>
                         {orders?.data?.map((order) => (
@@ -184,7 +184,7 @@ export default function NewProjectPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="startDate">Start Date *</Label>
+                    <Label htmlFor="startDate">تاریخ شروع *</Label>
                     <Input
                       id="startDate"
                       type="date"
@@ -193,7 +193,7 @@ export default function NewProjectPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dueDate">Due Date *</Label>
+                    <Label htmlFor="dueDate">سررسید *</Label>
                     <Input
                       id="dueDate"
                       type="date"
@@ -205,7 +205,7 @@ export default function NewProjectPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="priority">Priority</Label>
+                    <Label htmlFor="priority">اولویت</Label>
                     <Select
                       onValueChange={(value) => setValue('priority', value as any)}
                       defaultValue="MEDIUM"
@@ -214,16 +214,16 @@ export default function NewProjectPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="LOW">Low</SelectItem>
-                        <SelectItem value="MEDIUM">Medium</SelectItem>
-                        <SelectItem value="HIGH">High</SelectItem>
-                        <SelectItem value="URGENT">Urgent</SelectItem>
+                        <SelectItem value="LOW">کم</SelectItem>
+                        <SelectItem value="MEDIUM">متوسط</SelectItem>
+                        <SelectItem value="HIGH">بالا</SelectItem>
+                        <SelectItem value="URGENT">فوری</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="estimatedHours">Estimated Hours</Label>
+                    <Label htmlFor="estimatedHours">ساعات تخمینی</Label>
                     <Input
                       id="estimatedHours"
                       type="number"
@@ -235,10 +235,10 @@ export default function NewProjectPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="notes">Notes</Label>
+                  <Label htmlFor="notes">یادداشت ها</Label>
                   <Input
                     id="notes"
-                    placeholder="Additional project notes"
+                    placeholder="نکات تکمیلی پروژه"
                     {...register('notes')}
                   />
                 </div>
@@ -251,28 +251,28 @@ export default function NewProjectPage() {
             {/* Project Details */}
             <Card>
               <CardHeader>
-                <CardTitle>Project Details</CardTitle>
+                <CardTitle>جزئیات پروژه</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Status:</span>
-                    <span className="font-medium">Planning</span>
+                    <span className="text-muted-foreground">وضعیت:</span>
+                    <span className="font-medium">برنامه ریزی</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Progress:</span>
+                    <span className="text-muted-foreground">پیشرفت:</span>
                     <span className="font-medium">0%</span>
                   </div>
                   {watch('startDate') && watch('dueDate') && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Duration:</span>
+                      <span className="text-muted-foreground">مدت زمان:</span>
                       <span className="font-medium">
                         {Math.ceil(
                           (new Date(watch('dueDate')).getTime() -
                             new Date(watch('startDate')).getTime()) /
                             (1000 * 60 * 60 * 24)
                         )}{' '}
-                        days
+                        روز
                       </span>
                     </div>
                   )}
@@ -283,12 +283,11 @@ export default function NewProjectPage() {
             {/* Info */}
             <Card>
               <CardHeader>
-                <CardTitle>Information</CardTitle>
+                <CardTitle>اطلاعات</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  After creating the project, you can add tasks, assign team members, and track
-                  progress from the project details page.
+                  پس از ایجاد پروژه، می‌توانید وظایف را اضافه کنید، اعضای تیم را تعیین کنید و پیشرفت را از صفحه جزئیات پروژه پیگیری کنید.
                 </p>
               </CardContent>
             </Card>
@@ -302,7 +301,7 @@ export default function NewProjectPage() {
                   disabled={isSubmitting}
                   loading={isSubmitting}
                 >
-                  Create Project
+                  ایجاد پروژه
                 </Button>
                 <Button
                   type="button"
@@ -311,7 +310,7 @@ export default function NewProjectPage() {
                   onClick={() => router.push('/projects')}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  لغو کنید
                 </Button>
               </CardContent>
             </Card>

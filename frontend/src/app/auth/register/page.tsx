@@ -14,18 +14,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const registerSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
+  firstName: z.string().min(2, 'نام باید حداقل ۲ کاراکتر باشد'),
+  lastName: z.string().min(2, 'نام خانوادگی باید حداقل ۲ کاراکتر باشد'),
+  email: z.string().email('آدرس ایمیل نامعتبر'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain an uppercase letter')
-    .regex(/[a-z]/, 'Password must contain a lowercase letter')
-    .regex(/[0-9]/, 'Password must contain a number'),
+    .min(8, 'رمز عبور باید حداقل ۸ کاراکتر باشد')
+    .regex(/[A-Z]/, 'رمز عبور باید شامل حروف بزرگ باشد')
+    .regex(/[a-z]/, 'رمز عبور باید شامل حروف کوچک باشد')
+    .regex(/[0-9]/, 'رمز عبور باید شامل عدد باشد'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "رمزهای عبور مطابقت ندارند",
   path: ['confirmPassword'],
 });
 
@@ -52,7 +52,7 @@ export default function RegisterPage() {
       await registerUser(data.email, data.password, data.firstName, data.lastName);
       router.push('/dashboard');
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      const errorMessage = err instanceof Error ? err.message : 'ثبت نام ناموفق بود. لطفا دوباره امتحان کنید.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -75,8 +75,8 @@ export default function RegisterPage() {
         </div>
 
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold mb-2">Create an account</h2>
-          <p className="text-muted-foreground">Get started with SANAF ERP</p>
+          <h2 className="text-2xl font-bold mb-2">یک حساب کاربری ایجاد کنید</h2>
+          <p className="text-muted-foreground">شروع به کار با سامانه ERP شرکت صناف</p>
         </div>
 
         {error && (
@@ -91,7 +91,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
+            <Label htmlFor="firstName">نام</Label>
             <Input
               id="firstName"
               type="text"
@@ -103,7 +103,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
+            <Label htmlFor="lastName">نام خانوادگی</Label>
             <Input
               id="lastName"
               type="text"
@@ -115,7 +115,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">ایمیل</Label>
             <Input
               id="email"
               type="email"
@@ -127,7 +127,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">رمز عبور</Label>
             <Input
               id="password"
               type="password"
@@ -139,7 +139,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="confirmPassword">رمز عبور را تایید کنید</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -151,18 +151,18 @@ export default function RegisterPage() {
           </div>
 
           <Button type="submit" className="w-full" size="lg" loading={isLoading}>
-            Create Account
+            ایجاد حساب کاربری
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </form>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          قبلاً حساب کاربری دارید؟{' '}
           <Link
             href="/auth/login"
             className="text-electric-400 hover:text-electric-300 font-medium"
           >
-            Sign in
+            وارد شوید
           </Link>
         </p>
       </motion.div>

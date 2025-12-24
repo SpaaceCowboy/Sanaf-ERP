@@ -44,7 +44,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
             <div className="absolute inset-0 rounded-2xl bg-electric-500/20 animate-ping" />
           </div>
-          <p className="text-muted-foreground text-sm">Loading...</p>
+          <p className="text-muted-foreground text-sm">در حال بارگیری...</p>
         </div>
       </div>
     );

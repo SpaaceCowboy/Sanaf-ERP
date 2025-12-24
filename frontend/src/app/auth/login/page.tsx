@@ -41,7 +41,7 @@ export default function LoginPage() {
       await login(data.email, data.password);
       router.push('/dashboard');
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Invalid email or password';
+      const errorMessage = err instanceof Error ? err.message : 'ایمیل یا رمز عبور نامعتبر است';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -72,17 +72,17 @@ export default function LoginPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold">SANAF</h1>
-                <p className="text-sm text-muted-foreground">Enterprise Resource Planning</p>
+                <p className="text-sm text-muted-foreground">برنامه ریزی منابع سازمانی</p>
               </div>
             </div>
 
             <h2 className="text-4xl font-bold mb-4 leading-tight">
-              Streamline your<br />
-              <span className="text-gradient">business operations</span>
+              خود را ساده کنید<br />
+              <span className="text-gradient">عملیات تجاری</span>
             </h2>
 
             <p className="text-muted-foreground text-lg max-w-md">
-              Manage orders, track projects, control inventory, and automate documentation — all in one powerful platform.
+              مدیریت سفارشات، پیگیری پروژه‌ها، کنترل موجودی و خودکارسازی اسناد - همه در یک پلتفرم قدرتمند.
             </p>
 
             <div className="mt-12 grid grid-cols-2 gap-6">
@@ -127,8 +127,8 @@ export default function LoginPage() {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2">Welcome back</h2>
-            <p className="text-muted-foreground">Sign in to your account to continue</p>
+            <h2 className="text-2xl font-bold mb-2">خوش آمدید</h2>
+            <p className="text-muted-foreground">برای ادامه، وارد حساب کاربری خود شوید</p>
           </div>
 
           {error && (
@@ -143,7 +143,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">ایمیل</Label>
               <Input
                 id="email"
                 type="email"
@@ -155,7 +155,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">رمز عبور</Label>
               <Input
                 id="password"
                 type="password"
@@ -167,25 +167,25 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" loading={isLoading}>
-              Sign in
+              وارد شوید
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
+            حساب کاربری ندارید؟{' '}
             <Link
               href="/auth/register"
               className="text-electric-400 hover:text-electric-300 font-medium"
             >
-              Create one
+              یکی ایجاد کنید
             </Link>
           </p>
 
           {/* Demo credentials - Only shown in development */}
           {process.env.NODE_ENV === 'development' && (
             <div className="mt-8 p-4 rounded-lg bg-muted/50 border border-border">
-              <p className="text-xs text-muted-foreground mb-2">Demo credentials:</p>
+              <p className="text-xs text-muted-foreground mb-2">اعتبار نسخه ی نمایشی:</p>
               <div className="space-y-1 text-xs font-mono">
                 <p>
                   <span className="text-muted-foreground">Admin:</span>{' '}

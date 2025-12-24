@@ -17,16 +17,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/useToast';
 
 const inventorySchema = z.object({
-  sku: z.string().min(1, 'SKU is required'),
-  name: z.string().min(1, 'Name is required'),
+  sku: z.string().min(1, 'SKU مورد نیاز است'),
+  name: z.string().min(1, 'نام الزامی است'),
   description: z.string().optional(),
   type: z.enum(['RAW_MATERIAL', 'COMPONENT', 'FINISHED_GOOD', 'PACKAGING']),
-  category: z.string().min(1, 'Category is required'),
+  category: z.string().min(1, 'دسته بندی الزامی است'),
   quantity: z.coerce.number().int().min(0).default(0),
   minStock: z.coerce.number().int().min(0).default(0),
   maxStock: z.coerce.number().int().min(0).optional(),
   reorderPoint: z.coerce.number().int().min(0).default(10),
-  unitCost: z.coerce.number().positive('Unit cost must be positive'),
+  unitCost: z.coerce.number().positive('هزینه واحد باید مثبت باشد'),
   currency: z.string().default('USD'),
   unit: z.string().default('PCS'),
   weight: z.coerce.number().positive().optional(),
@@ -72,15 +72,15 @@ export default function NewInventoryPage() {
     mutationFn: inventoryApi.create,
     onSuccess: () => {
       toast({
-        title: 'Success',
-        description: 'Inventory item created successfully',
+        title: 'موفقیت',
+        description: 'کالای موجودی با موفقیت ایجاد شد',
       });
       router.push('/inventory');
     },
     onError: (error: any) => {
       toast({
         title: 'Error',
-        description: error.response?.data?.error || 'Failed to create inventory item',
+        description: error.response?.data?.error || 'ایجاد کالا در انبار ناموفق بود',
         variant: 'destructive',
       });
     },
@@ -120,12 +120,12 @@ export default function NewInventoryPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/inventory">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              برگشت
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Add Inventory Item</h1>
-            <p className="text-muted-foreground mt-1">Create a new inventory item</p>
+            <h1 className="text-3xl font-bold tracking-tight">افزودن کالا به موجودی</h1>
+            <p className="text-muted-foreground mt-1">یک کالای موجودی جدید ایجاد کنید</p>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function NewInventoryPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Package className="w-5 h-5" />
-                  Basic Information
+                  اطلاعات پایه
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -154,7 +154,7 @@ export default function NewInventoryPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="name">Item Name *</Label>
+                    <Label htmlFor="name">نام مورد *</Label>
                     <Input
                       id="name"
                       placeholder="e.g., Resistor 100Ω"
@@ -165,17 +165,17 @@ export default function NewInventoryPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">توضیحات</Label>
                   <Input
                     id="description"
-                    placeholder="Brief description"
+                    placeholder="شرح مختصر"
                     {...register('description')}
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="type">Type *</Label>
+                    <Label htmlFor="type">انواع *</Label>
                     <Select
                       onValueChange={(value) => setValue('type', value as any)}
                       defaultValue="RAW_MATERIAL"
@@ -184,18 +184,18 @@ export default function NewInventoryPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="RAW_MATERIAL">Raw Material</SelectItem>
-                        <SelectItem value="COMPONENT">Component</SelectItem>
-                        <SelectItem value="FINISHED_GOOD">Finished Good</SelectItem>
-                        <SelectItem value="PACKAGING">Packaging</SelectItem>
+                        <SelectItem value="RAW_MATERIAL">مواد خام</SelectItem>
+                        <SelectItem value="COMPONENT">جزء</SelectItem>
+                        <SelectItem value="FINISHED_GOOD">تمام شد</SelectItem>
+                        <SelectItem value="PACKAGING">بسته بندی</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="category">Category *</Label>
+                    <Label htmlFor="category">دسته بندی *</Label>
                     <Input
                       id="category"
-                      placeholder="e.g., Electronics"
+                      placeholder="به عنوان مثال، الکترونیک"
                       error={errors.category?.message}
                       {...register('category')}
                     />
@@ -207,12 +207,12 @@ export default function NewInventoryPage() {
             {/* Stock Information */}
             <Card>
               <CardHeader>
-                <CardTitle>Stock Information</CardTitle>
+                <CardTitle>اطلاعات انبار</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="quantity">Current Quantity</Label>
+                    <Label htmlFor="quantity">مقدار فعلی</Label>
                     <Input
                       id="quantity"
                       type="number"
@@ -222,7 +222,7 @@ export default function NewInventoryPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="unit">Unit</Label>
+                    <Label htmlFor="unit">واحد</Label>
                     <Input
                       id="unit"
                       placeholder="PCS, KG, M, L"
@@ -233,7 +233,7 @@ export default function NewInventoryPage() {
 
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="minStock">Min Stock</Label>
+                    <Label htmlFor="minStock">حداقل سهام</Label>
                     <Input
                       id="minStock"
                       type="number"
@@ -242,16 +242,16 @@ export default function NewInventoryPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="maxStock">Max Stock</Label>
+                    <Label htmlFor="maxStock">حداکثر سهام</Label>
                     <Input
                       id="maxStock"
                       type="number"
-                      placeholder="Optional"
+                      placeholder="اختیاری"
                       {...register('maxStock')}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="reorderPoint">Reorder Point</Label>
+                    <Label htmlFor="reorderPoint">نقطه سفارش مجدد</Label>
                     <Input
                       id="reorderPoint"
                       type="number"
@@ -266,12 +266,12 @@ export default function NewInventoryPage() {
             {/* Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle>Pricing & Details</CardTitle>
+                <CardTitle>قیمت و جزئیات</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="unitCost">Unit Cost *</Label>
+                    <Label htmlFor="unitCost">هزینه واحد *</Label>
                     <Input
                       id="unitCost"
                       type="number"
@@ -282,7 +282,7 @@ export default function NewInventoryPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="currency">Currency</Label>
+                    <Label htmlFor="currency">ارز</Label>
                     <Input
                       id="currency"
                       placeholder="USD"
@@ -293,7 +293,7 @@ export default function NewInventoryPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (optional)</Label>
+                    <Label htmlFor="weight">وزن (اختیاری)</Label>
                     <Input
                       id="weight"
                       type="number"
@@ -303,7 +303,7 @@ export default function NewInventoryPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="dimensions">Dimensions (LxWxH)</Label>
+                    <Label htmlFor="dimensions">ابعاد (ارتفاع × عرض × طول)</Label>
                     <Input
                       id="dimensions"
                       placeholder="e.g., 10x5x3 cm"
@@ -320,14 +320,14 @@ export default function NewInventoryPage() {
             {/* Supplier & Location */}
             <Card>
               <CardHeader>
-                <CardTitle>Supplier & Location</CardTitle>
+                <CardTitle>تامین کننده و مکان</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="supplierId">Supplier</Label>
                   <Select onValueChange={(value) => setValue('supplierId', value)}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select supplier" />
+                      <SelectValue placeholder="تامین کننده را انتخاب کنید" />
                     </SelectTrigger>
                     <SelectContent>
                       {suppliers?.data?.map((supplier) => (
@@ -340,7 +340,7 @@ export default function NewInventoryPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="warehouseZone">Warehouse Zone</Label>
+                  <Label htmlFor="warehouseZone">منطقه انبار</Label>
                   <Input
                     id="warehouseZone"
                     placeholder="e.g., A-1"
@@ -349,7 +349,7 @@ export default function NewInventoryPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="binLocation">Bin Location</Label>
+                  <Label htmlFor="binLocation">محل سطل</Label>
                   <Input
                     id="binLocation"
                     placeholder="e.g., A-1-001"
@@ -362,11 +362,11 @@ export default function NewInventoryPage() {
             {/* Import/Export */}
             <Card>
               <CardHeader>
-                <CardTitle>Import/Export Info</CardTitle>
+                <CardTitle>اطلاعات واردات/صادرات</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="hsCode">HS Code</Label>
+                  <Label htmlFor="hsCode">کد HS</Label>
                   <Input
                     id="hsCode"
                     placeholder="e.g., 8541.10.00"
@@ -375,7 +375,7 @@ export default function NewInventoryPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="countryOfOrigin">Country of Origin</Label>
+                  <Label htmlFor="countryOfOrigin">کشور مبدا</Label>
                   <Input
                     id="countryOfOrigin"
                     placeholder="e.g., China"
@@ -394,7 +394,7 @@ export default function NewInventoryPage() {
                   disabled={isSubmitting}
                   loading={isSubmitting}
                 >
-                  Create Inventory Item
+                  ایجاد کالا در انبار
                 </Button>
                 <Button
                   type="button"
@@ -403,7 +403,7 @@ export default function NewInventoryPage() {
                   onClick={() => router.push('/inventory')}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  لغو کنید
                 </Button>
               </CardContent>
             </Card>

@@ -17,27 +17,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/useToast';
 
 const orderItemSchema = z.object({
-  productName: z.string().min(1, 'Product name is required'),
-  productCode: z.string().min(1, 'Product code is required'),
+  productName: z.string().min(1, 'نام محصول الزامی است'),
+  productCode: z.string().min(1, 'کد محصول مورد نیاز است'),
   description: z.string().optional(),
-  quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
-  unitPrice: z.coerce.number().min(0, 'Unit price must be positive'),
+  quantity: z.coerce.number().min(1, 'تعداد باید حداقل ۱ باشد'),
+  unitPrice: z.coerce.number().min(0, 'قیمت واحد باید مثبت باشد'),
   hsCode: z.string().optional(),
 });
 
 const orderSchema = z.object({
-  customerId: z.string().min(1, 'Customer is required'),
-  requiredDate: z.string().min(1, 'Required date is required'),
-  shippingAddress: z.string().min(1, 'Shipping address is required'),
-  shippingCity: z.string().min(1, 'Shipping city is required'),
-  shippingCountry: z.string().min(1, 'Shipping country is required'),
+  customerId: z.string().min(1, 'مشتری مورد نیاز است'),
+  requiredDate: z.string().min(1, 'تاریخ مورد نیاز است'),
+  shippingAddress: z.string().min(1, 'آدرس حمل و نقل الزامی است'),
+  shippingCity: z.string().min(1, 'شهر حمل و نقل الزامی است'),
+  shippingCountry: z.string().min(1, 'کشور حمل و نقل الزامی است'),
   shippingMethod: z.string().optional(),
   incoterms: z.string().optional(),
   taxRate: z.coerce.number().min(0).max(100).default(0),
   shippingCost: z.coerce.number().min(0).default(0),
   discount: z.coerce.number().min(0).default(0),
   notes: z.string().optional(),
-  items: z.array(orderItemSchema).min(1, 'At least one item is required'),
+  items: z.array(orderItemSchema).min(1, 'حداقل یک مورد الزامی است'),
 });
 
 type OrderFormData = z.infer<typeof orderSchema>;
@@ -48,7 +48,7 @@ export default function NewOrderPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: customers } = useQuery({
-    queryKey: ['customers'],
+    queryKey: ['مشتریان'],
     queryFn: () => customersApi.list(),
   });
 
@@ -76,22 +76,22 @@ export default function NewOrderPage() {
 
   const items = watch('items');
   const subtotal = items.reduce((sum, item) => sum + (item.quantity || 0) * (item.unitPrice || 0), 0);
-  const taxAmount = (subtotal * (watch('taxRate') || 0)) / 100;
-  const totalAmount = subtotal + taxAmount + (watch('shippingCost') || 0) - (watch('discount') || 0);
+  const taxAmount = (subtotal * (watch('نرخ مالیات') || 0)) / 100;
+  const totalAmount = subtotal + taxAmount + (watch('هزینه حمل و نقل') || 0) - (watch('تخفیف') || 0);
 
   const createMutation = useMutation({
     mutationFn: ordersApi.create,
     onSuccess: () => {
       toast({
-        title: 'Success',
-        description: 'Order created successfully',
+        title: 'موفقیت',
+        description: 'سفارش با موفقیت ایجاد شد',
       });
       router.push('/orders');
     },
     onError: (error: any) => {
       toast({
-        title: 'Error',
-        description: error.response?.data?.error || 'Failed to create order',
+        title: 'خطا',
+        description: error.response?.data?.error || 'ایجاد سفارش ناموفق بود',
         variant: 'destructive',
       });
     },
@@ -132,12 +132,12 @@ export default function NewOrderPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/orders">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              برگشت
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Order</h1>
-            <p className="text-muted-foreground mt-1">Create a new customer order</p>
+            <h1 className="text-3xl font-bold tracking-tight">ایجاد سفارش</h1>
+            <p className="text-muted-foreground mt-1">ایجاد سفارش جدید مشتری</p>
           </div>
         </div>
       </div>
@@ -152,12 +152,12 @@ export default function NewOrderPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5" />
-                  Customer & Shipping Information
+                  اطلاعات مشتری و حمل و نقل
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="customerId">Customer *</Label>
+                  <Label htmlFor="customerId">مشتری *</Label>
                   <Select onValueChange={(value) => setValue('customerId', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select customer" />
@@ -176,12 +176,12 @@ export default function NewOrderPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="requiredDate">Required Date *</Label>
+                  <Label htmlFor="requiredDate">تاریخ مورد نیاز *</Label>
                   <Input
                     id="requiredDate"
                     type="date"
                     error={errors.requiredDate?.message}
-                    {...register('requiredDate')}
+                    {...register('تاریخ مورد نیاز')}
                   />
                 </div>
 
@@ -189,7 +189,7 @@ export default function NewOrderPage() {
                   <Label htmlFor="shippingAddress">Shipping Address *</Label>
                   <Input
                     id="shippingAddress"
-                    placeholder="Street address"
+                    placeholder="آدرس خیابان"
                     error={errors.shippingAddress?.message}
                     {...register('shippingAddress')}
                   />
@@ -197,19 +197,19 @@ export default function NewOrderPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="shippingCity">City *</Label>
+                    <Label htmlFor="shippingCity">شهر *</Label>
                     <Input
                       id="shippingCity"
-                      placeholder="City"
+                      placeholder="شهر"
                       error={errors.shippingCity?.message}
                       {...register('shippingCity')}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="shippingCountry">Country *</Label>
+                    <Label htmlFor="shippingCountry">کشور *</Label>
                     <Input
                       id="shippingCountry"
-                      placeholder="Country"
+                      placeholder="کشور"
                       error={errors.shippingCountry?.message}
                       {...register('shippingCountry')}
                     />
@@ -218,7 +218,7 @@ export default function NewOrderPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="shippingMethod">Shipping Method</Label>
+                    <Label htmlFor="shippingMethod">روش حمل و نقل</Label>
                     <Input
                       id="shippingMethod"
                       placeholder="e.g., Air Freight"
@@ -226,7 +226,7 @@ export default function NewOrderPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="incoterms">Incoterms</Label>
+                    <Label htmlFor="incoterms">اینکوترمز</Label>
                     <Input
                       id="incoterms"
                       placeholder="e.g., FOB, CIF"
@@ -241,7 +241,7 @@ export default function NewOrderPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span>Order Items</span>
+                  <span>سفارش اقلام</span>
                   <Button
                     type="button"
                     size="sm"
@@ -250,7 +250,7 @@ export default function NewOrderPage() {
                     }
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Item
+                    آیتم را اضافه کنید
                   </Button>
                 </CardTitle>
               </CardHeader>
@@ -273,17 +273,17 @@ export default function NewOrderPage() {
 
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label>Product Name *</Label>
+                        <Label>نام محصول *</Label>
                         <Input
-                          placeholder="Product name"
+                          placeholder="نام محصول"
                           error={errors.items?.[index]?.productName?.message}
                           {...register(`items.${index}.productName`)}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Product Code *</Label>
+                        <Label>کد محصول *</Label>
                         <Input
-                          placeholder="SKU/Code"
+                          placeholder="کد/SKU"
                           error={errors.items?.[index]?.productCode?.message}
                           {...register(`items.${index}.productCode`)}
                         />
@@ -293,7 +293,7 @@ export default function NewOrderPage() {
                     <div className="space-y-2">
                       <Label>Description</Label>
                       <Input
-                        placeholder="Item description"
+                        placeholder="توضیحات مورد"
                         {...register(`items.${index}.description`)}
                       />
                     </div>
@@ -310,7 +310,7 @@ export default function NewOrderPage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Unit Price *</Label>
+                        <Label>قیمت واحد *</Label>
                         <Input
                           type="number"
                           step="0.01"
@@ -321,16 +321,16 @@ export default function NewOrderPage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>HS Code</Label>
+                        <Label>کد HS</Label>
                         <Input
-                          placeholder="Optional"
+                          placeholder="اختیاری"
                           {...register(`items.${index}.hsCode`)}
                         />
                       </div>
                     </div>
 
                     <div className="text-right text-sm text-muted-foreground">
-                      Total: ${((items[index]?.quantity || 0) * (items[index]?.unitPrice || 0)).toFixed(2)}
+                      مجموع: ${((items[index]?.quantity || 0) * (items[index]?.unitPrice || 0)).toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -346,11 +346,11 @@ export default function NewOrderPage() {
             {/* Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle>Pricing</CardTitle>
+                <CardTitle>قیمت گذاری</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="taxRate">Tax Rate (%)</Label>
+                  <Label htmlFor="taxRate">نرخ مالیات (%)</Label>
                   <Input
                     id="taxRate"
                     type="number"
@@ -363,7 +363,7 @@ export default function NewOrderPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="shippingCost">Shipping Cost</Label>
+                  <Label htmlFor="shippingCost">هزینه حمل و نقل</Label>
                   <Input
                     id="shippingCost"
                     type="number"
@@ -375,7 +375,7 @@ export default function NewOrderPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="discount">Discount</Label>
+                  <Label htmlFor="discount">تخفیف</Label>
                   <Input
                     id="discount"
                     type="number"
@@ -388,23 +388,23 @@ export default function NewOrderPage() {
 
                 <div className="pt-4 border-t border-border space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Subtotal:</span>
+                    <span>جمع فرعی:</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Tax:</span>
+                    <span>مالیات:</span>
                     <span>${taxAmount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Shipping:</span>
+                    <span>حمل و نقل:</span>
                     <span>${(watch('shippingCost') || 0).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Discount:</span>
+                    <span>تخفیف:</span>
                     <span>-${(watch('discount') || 0).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg pt-2 border-t border-border">
-                    <span>Total:</span>
+                    <span>مجموع:</span>
                     <span>${totalAmount.toFixed(2)}</span>
                   </div>
                 </div>
@@ -414,14 +414,14 @@ export default function NewOrderPage() {
             {/* Notes */}
             <Card>
               <CardHeader>
-                <CardTitle>Notes</CardTitle>
+                <CardTitle>یادداشت ها</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Label htmlFor="notes">Additional Notes</Label>
+                  <Label htmlFor="notes">یادداشت های اضافی</Label>
                   <Input
                     id="notes"
-                    placeholder="Optional notes"
+                    placeholder="یادداشت های اختیاری"
                     {...register('notes')}
                   />
                 </div>
@@ -437,7 +437,7 @@ export default function NewOrderPage() {
                   disabled={isSubmitting}
                   loading={isSubmitting}
                 >
-                  Create Order
+                  ایجاد سفارش
                 </Button>
                 <Button
                   type="button"
@@ -446,7 +446,7 @@ export default function NewOrderPage() {
                   onClick={() => router.push('/orders')}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  لغو کنید
                 </Button>
               </CardContent>
             </Card>

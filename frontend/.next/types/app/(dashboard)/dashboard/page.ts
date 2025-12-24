@@ -1,4 +1,4 @@
-// File: C:\Users\shayan\sanaf\frontend\src\app\(dashboard)\dashboard\page.tsx
+// File: C:\Users\Ghanbari\Sanaf-ERP\frontend\src\app\(dashboard)\dashboard\page.tsx
 import * as entry from '../../../../../src/app/(dashboard)/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

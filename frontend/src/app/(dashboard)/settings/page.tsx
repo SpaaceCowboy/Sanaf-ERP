@@ -30,12 +30,12 @@ import { Badge } from '@/components/ui/badge';
 import { cn, getInitials } from '@/lib/utils';
 
 const settingsSections = [
-  { id: 'profile', label: 'Profile', icon: User },
-  { id: 'security', label: 'Security', icon: Lock },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
-  { id: 'company', label: 'Company', icon: Building },
-  { id: 'localization', label: 'Localization', icon: Globe },
-  { id: 'appearance', label: 'Appearance', icon: Palette },
+  { id: 'profile', label: 'نمایه', icon: User },
+  { id: 'security', label: 'امنیت', icon: Lock },
+  { id: 'notifications', label: 'اطلاعیه ها', icon: Bell },
+  { id: 'company', label: 'شرکت', icon: Building },
+  { id: 'localization', label: 'بومی سازی', icon: Globe },
+  { id: 'appearance', label: 'ظاهر', icon: Palette },
 ];
 
 function ProfileSettings() {
@@ -44,8 +44,8 @@ function ProfileSettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Profile Information</CardTitle>
-        <CardDescription>Update your personal information</CardDescription>
+        <CardTitle>اطلاعات نمایه</CardTitle>
+        <CardDescription>اطلاعات شخصی خود را به روز کنید</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center gap-6">
@@ -57,7 +57,7 @@ function ProfileSettings() {
           </Avatar>
           <div>
             <Button variant="outline" size="sm">
-              Change Avatar
+              آواتار را تغییر دهید
             </Button>
             <p className="text-xs text-muted-foreground mt-2">
               JPG, PNG or GIF. Max size 2MB.
@@ -67,19 +67,19 @@ function ProfileSettings() {
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">نام کامل</Label>
             <Input id="name" defaultValue={user?.name} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">ایمیل</Label>
             <Input id="email" type="email" defaultValue={user?.email} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">تلفن</Label>
             <Input id="phone" type="tel" defaultValue={user?.phone || ''} placeholder="+1 234 567 8900" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="department">Department</Label>
+            <Label htmlFor="department">بخش</Label>
             <Input id="department" defaultValue={user?.department || ''} placeholder="e.g. Production" />
           </div>
         </div>
@@ -89,14 +89,14 @@ function ProfileSettings() {
             {user?.role}
           </Badge>
           <span className="text-sm text-muted-foreground">
-            Role assigned by administrator
+            نقش تعیین شده توسط مدیر
           </span>
         </div>
 
         <div className="flex justify-end">
           <Button>
             <Save className="w-4 h-4 mr-2" />
-            Save Changes
+            ذخیره تغییرات
           </Button>
         </div>
       </CardContent>
@@ -108,23 +108,23 @@ function SecuritySettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Security Settings</CardTitle>
-        <CardDescription>Manage your password and security preferences</CardDescription>
+        <CardTitle>تنظیمات امنیتی</CardTitle>
+        <CardDescription>مدیریت رمز عبور و تنظیمات امنیتی شما</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <h4 className="text-sm font-medium">Change Password</h4>
+          <h4 className="text-sm font-medium">رمز عبور را تغییر دهید</h4>
           <div className="grid gap-4">
             <div className="space-y-2">
-              <Label htmlFor="current-password">Current Password</Label>
+              <Label htmlFor="current-password">رمز عبور فعلی</Label>
               <Input id="current-password" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
+              <Label htmlFor="new-password">رمز عبور جدید</Label>
               <Input id="new-password" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Label htmlFor="confirm-password">رمز عبور جدید را تأیید کنید</Label>
               <Input id="confirm-password" type="password" />
             </div>
           </div>
@@ -136,12 +136,12 @@ function SecuritySettings() {
               <Shield className="w-5 h-5 text-volt-400" />
             </div>
             <div>
-              <h4 className="text-sm font-medium">Two-Factor Authentication</h4>
+              <h4 className="text-sm font-medium">احراز هویت دو مرحله‌ای</h4>
               <p className="text-sm text-muted-foreground mt-1">
-                Add an extra layer of security to your account
+                یک لایه امنیتی اضافی به حساب کاربری خود اضافه کنید
               </p>
               <Button variant="outline" size="sm" className="mt-3">
-                Enable 2FA
+                2FA را فعال کنید
               </Button>
             </div>
           </div>
@@ -150,7 +150,7 @@ function SecuritySettings() {
         <div className="flex justify-end">
           <Button>
             <Save className="w-4 h-4 mr-2" />
-            Update Password
+            رمز عبور را به روز کنید
           </Button>
         </div>
       </CardContent>
@@ -162,16 +162,16 @@ function NotificationSettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Notification Preferences</CardTitle>
-        <CardDescription>Choose what notifications you want to receive</CardDescription>
+        <CardTitle>تنظیمات برگزیده اعلان</CardTitle>
+        <CardDescription>انتخاب کنید که می‌خواهید چه اعلان‌هایی دریافت کنید</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {[
-          { label: 'Order Updates', description: 'Get notified when order status changes' },
-          { label: 'Project Deadlines', description: 'Reminders for upcoming project deadlines' },
-          { label: 'Low Stock Alerts', description: 'Alerts when inventory is below threshold' },
-          { label: 'Task Assignments', description: 'Notifications for new task assignments' },
-          { label: 'System Updates', description: 'Important system and maintenance notifications' },
+          { label: 'سفارش به روز رسانی', description: 'هنگام تغییر وضعیت سفارش مطلع شوید' },
+          { label: 'مهلت های پروژه', description: 'یادآوری برای مهلت‌های پروژه آینده' },
+          { label: 'هشدارهای کمبود موجودی', description: 'هشدار در صورت کاهش موجودی به زیر حد نصاب' },
+          { label: 'تکالیف', description: 'اعلان‌ها برای تکالیف جدید' },
+          { label: 'به روز رسانی های سیستم', description: 'اطلاعیه‌های مهم سیستم و نگهداری' },
         ].map((item) => (
           <div
             key={item.label}
@@ -187,14 +187,14 @@ function NotificationSettings() {
                 <div className="w-9 h-5 bg-muted rounded-full peer peer-checked:bg-electric-600 transition-colors relative">
                   <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4" />
                 </div>
-                <span className="text-sm text-muted-foreground">Email</span>
+                <span className="text-sm text-muted-foreground">ایمیل</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="sr-only peer" defaultChecked />
                 <div className="w-9 h-5 bg-muted rounded-full peer peer-checked:bg-electric-600 transition-colors relative">
                   <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4" />
                 </div>
-                <span className="text-sm text-muted-foreground">In-App</span>
+                <span className="text-sm text-muted-foreground">درون برنامه</span>
               </label>
             </div>
           </div>
@@ -203,7 +203,7 @@ function NotificationSettings() {
         <div className="flex justify-end">
           <Button>
             <Save className="w-4 h-4 mr-2" />
-            Save Preferences
+            ذخیره تنظیمات
           </Button>
         </div>
       </CardContent>
@@ -218,15 +218,15 @@ function CompanySettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Company Information</CardTitle>
+        <CardTitle>اطلاعات شرکت</CardTitle>
         <CardDescription>
-          {isAdmin ? 'Manage company details used in documents' : 'View company details'}
+          {isAdmin ? 'مدیریت جزئیات شرکت مورد استفاده در اسناد' : 'مشاهده جزئیات شرکت'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="company-name">Company Name</Label>
+            <Label htmlFor="company-name">نام شرکت</Label>
             <Input
               id="company-name"
               defaultValue="Electronic Industries Ltd."
@@ -234,11 +234,11 @@ function CompanySettings() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tax-id">Tax ID / VAT Number</Label>
+            <Label htmlFor="tax-id">شناسه مالیاتی / شماره مالیات بر ارزش افزوده</Label>
             <Input id="tax-id" defaultValue="US123456789" disabled={!isAdmin} />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="address">Address</Label>
+            <Label htmlFor="address">آدرس</Label>
             <Input
               id="address"
               defaultValue="123 Industrial Park, Tech City"
@@ -285,13 +285,13 @@ function LocalizationSettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Localization</CardTitle>
-        <CardDescription>Set your preferred language and regional settings</CardDescription>
+        <CardTitle>بومی سازی</CardTitle>
+        <CardDescription>تنظیمات زبان و منطقه مورد نظر خود را تنظیم کنید</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Language</Label>
+            <Label>زبان</Label>
             <Select defaultValue="en">
               <SelectTrigger>
                 <SelectValue />
@@ -305,7 +305,7 @@ function LocalizationSettings() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Timezone</Label>
+            <Label>منطقه زمانی</Label>
             <Select defaultValue="utc-8">
               <SelectTrigger>
                 <SelectValue />
@@ -319,7 +319,7 @@ function LocalizationSettings() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Currency</Label>
+            <Label>ارز</Label>
             <Select defaultValue="usd">
               <SelectTrigger>
                 <SelectValue />
@@ -333,7 +333,7 @@ function LocalizationSettings() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Date Format</Label>
+            <Label>فرمت تاریخ</Label>
             <Select defaultValue="mdy">
               <SelectTrigger>
                 <SelectValue />
@@ -350,7 +350,7 @@ function LocalizationSettings() {
         <div className="flex justify-end">
           <Button>
             <Save className="w-4 h-4 mr-2" />
-            Save Settings
+            تنظیمات را ذخیره کنید
           </Button>
         </div>
       </CardContent>
@@ -362,12 +362,12 @@ function AppearanceSettings() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Appearance</CardTitle>
-        <CardDescription>Customize the look and feel of the application</CardDescription>
+        <CardTitle>ظاهر</CardTitle>
+        <CardDescription>ظاهر و رابط کاربری برنامه را سفارشی کنید</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <Label>Theme</Label>
+          <Label>تم</Label>
           <div className="grid grid-cols-3 gap-4">
             {[
               { value: 'dark', label: 'Dark', bg: 'bg-carbon-950' },
@@ -415,7 +415,7 @@ function AppearanceSettings() {
         <div className="flex justify-end">
           <Button>
             <Save className="w-4 h-4 mr-2" />
-            Save Appearance
+            ذخیره ظاهر
           </Button>
         </div>
       </CardContent>
@@ -449,9 +449,9 @@ export default function SettingsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">تنظیمات</h1>
         <p className="text-muted-foreground mt-1">
-          Manage your account and application preferences
+         تنظیمات حساب و برنامه خود را مدیریت کنید
         </p>
       </div>
 
