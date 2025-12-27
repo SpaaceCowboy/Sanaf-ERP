@@ -56,12 +56,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
       <Header sidebarCollapsed={sidebarCollapsed} />
 
       <main
         className="pt-16 min-h-screen transition-all duration-200"
-        style={{ marginLeft: sidebarCollapsed ? 80 : 280 }}
+        style={{ marginRight: sidebarCollapsed ? 80 : 280 }}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -76,6 +75,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </motion.div>
         </AnimatePresence>
       </main>
+      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
 
       {/* Background decorations */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">

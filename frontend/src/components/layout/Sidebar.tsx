@@ -50,7 +50,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       initial={false}
       animate={{ width: collapsed ? 80 : 280 }}
       transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="fixed left-0 top-0 z-40 h-screen bg-card border-r border-border flex flex-col"
+      className="fixed right-0 top-0 z-40 h-screen bg-card border-r border-border flex flex-col"
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-4 border-b border-border">

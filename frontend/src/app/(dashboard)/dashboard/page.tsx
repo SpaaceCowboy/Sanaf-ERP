@@ -80,12 +80,13 @@ function StatCard({ title, value, subtitle, trend, icon, iconBg, delay = 0 }: St
       <Card className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
         <CardContent className="p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-center text-center">
+            
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">{title}</p>
               <p className="text-3xl font-bold tracking-tight">{value}</p>
               {(subtitle || trend !== undefined) && (
-                <div className="flex items-center gap-2">
+                <div className="flex  gap-2">
                   {trend !== undefined && (
                     <span
                       className={cn(
@@ -107,7 +108,7 @@ function StatCard({ title, value, subtitle, trend, icon, iconBg, delay = 0 }: St
                 </div>
               )}
             </div>
-            <div className={cn('p-3 rounded-xl', iconBg)}>{icon}</div>
+            
           </div>
         </CardContent>
       </Card>
@@ -133,24 +134,24 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">داشبورد</h1>
-          <p className="text-muted-foreground mt-1">
-            بررسی اجمالی عملکرد کسب و کار شما
-          </p>
-        </div>
         <Button asChild>
           <Link href="/reports">
             مشاهده گزارش ها
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
+        <div>
+          <h1 className="text-3xl  tracking-tight flex-start text-end">داشبورد</h1>
+          <p className="text-muted-foreground mt-1">
+            بررسی اجمالی عملکرد کسب و کار شما
+          </p>
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 ">
         <StatCard
-          title="Total Orders"
+          title="کل سفارشات"
           value={formatNumber(stats.orders.total)}
           subtitle="this month"
           trend={stats.orders.trend}
@@ -159,7 +160,7 @@ export default function DashboardPage() {
           delay={0.1}
         />
         <StatCard
-          title="Revenue"
+          title="درآمد"
           value={formatCurrency(stats.revenue.total)}
           subtitle="vs last month"
           trend={stats.revenue.trend}
@@ -168,7 +169,7 @@ export default function DashboardPage() {
           delay={0.2}
         />
         <StatCard
-          title="Inventory Items"
+          title="اقلام موجودی"
           value={formatNumber(stats.inventory.totalItems)}
           subtitle={`${stats.inventory.lowStock} low stock`}
           icon={<Package className="w-5 h-5 text-volt-400" />}
@@ -176,7 +177,7 @@ export default function DashboardPage() {
           delay={0.3}
         />
         <StatCard
-          title="Active Projects"
+          title="پروژه های فعال"
           value={stats.projects.active}
           subtitle={`${stats.projects.overdue} overdue`}
           icon={<FolderKanban className="w-5 h-5 text-danger-400" />}
@@ -197,8 +198,8 @@ export default function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
+               <Badge variant="success">+8.5%</Badge>
                 روند درآمد
-                <Badge variant="success">+8.5%</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -256,7 +257,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.6 }}
         >
           <Card className="h-full">
-            <CardHeader>
+            <CardHeader className="text-center">
               <CardTitle>سفارشات بر اساس وضعیت</CardTitle>
             </CardHeader>
             <CardContent>
@@ -289,13 +290,14 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 gap-2 mt-4">
                 {orderStatusData.map((item) => (
                   <div key={item.name} className="flex items-center gap-2">
+                                        <span className="text-xs text-muted-foreground">
+                      {item.name} ({item.value})
+                    </span>
+
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="text-xs text-muted-foreground">
-                      {item.name} ({item.value})
-                    </span>
                   </div>
                 ))}
               </div>
@@ -313,7 +315,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.7 }}
         >
           <Card>
-            <CardHeader>
+            <CardHeader className="text-center">
               <CardTitle>موجودی بر اساس نوع</CardTitle>
             </CardHeader>
             <CardContent>
@@ -351,8 +353,8 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
         >
-          <Card className="h-full">
-            <CardHeader>
+          <Card className="h-full text-end">
+            <CardHeader className="text-center">
               <CardTitle>هشدارها و وظایف</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -391,8 +393,8 @@ export default function DashboardPage() {
               {/* Progress Summary */}
               <div className="p-4 rounded-lg bg-muted/30 border border-border">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium">هدف ماهانه</p>
                   <span className="text-sm text-muted-foreground">78%</span>
+                  <p className="text-sm font-medium">هدف ماهانه</p>
                 </div>
                 <Progress value={78} className="h-2" />
                 <p className="text-xs text-muted-foreground mt-2">

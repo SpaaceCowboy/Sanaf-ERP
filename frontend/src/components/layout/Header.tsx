@@ -32,19 +32,9 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
 
   return (
     <header
-      className="fixed top-0 right-0 z-30 h-16 bg-card/80 backdrop-blur-md border-b border-border flex items-center justify-between px-6 transition-all duration-200"
-      style={{ left: sidebarCollapsed ? 80 : 280 }}
+      className="fixed  w-[84%] top-0 left-0 z-30 h-16 bg-card/80 backdrop-blur-md border-b border-border flex items-center justify-between px-6 transition-all duration-200"
+      style={{ width: sidebarCollapsed ? 1600 : 1400 }}
     >
-      {/* Search */}
-      <div className="flex items-center gap-4 flex-1 max-w-xl">
-        <div className="relative flex-1">
-          <Input
-            placeholder="جستجوی سفارشات، پروژه‌ها، موجودی..."
-            className=" pl-10 bg-muted/50 border-transparent focus:bg-background"
-            icon={<Search className="w-4 h-4" />}
-          />
-        </div>
-      </div>
 
       {/* Right side */}
       <div className="flex items-center gap-4">
@@ -92,6 +82,16 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+            {/* Search */}
+      <div className="flex items-center  gap-4 flex-1 max-w-xl">
+        <div className="relative flex-1">
+          <Input
+            placeholder="جستجوی سفارشات، پروژه‌ها، موجودی"
+            className="text-end pl-10 bg-muted/50 border-transparent focus:bg-background"
+            icon={<Search className="w-4 h-4" />}
+          />
+        </div>
       </div>
     </header>
   );
